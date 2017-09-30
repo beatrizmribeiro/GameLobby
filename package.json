@@ -1,0 +1,25 @@
+{
+  "name": "gamelobby",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.16.1",
+    "nodemon": "^1.12.1",
+    "twit": "^2.2.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GamersLobby/GameLobby.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GamersLobby/GameLobby/issues"
+  },
+  "homepage": "https://github.com/GamersLobby/GameLobby#readme"
+}
