@@ -4,14 +4,7 @@
 // res.end(
 //	console.log("grabbing video game news tweets");
 //console.log(require);
-var Twit = require('twit');
-console.log(Twit);
-var config = require('./config');
-var T = new Twit(config);
 
-T.get('search/tweets', { q: 'video games', count: 5 }, function(err, data, response) {
- //  console.log(data)
- });
 // );
 
 // })
