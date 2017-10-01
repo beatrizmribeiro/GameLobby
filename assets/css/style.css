@@ -1,5 +1,4 @@
-.panel-default>.panel-heading,
-.jumbotron {
+.panel-default>.panel-heading,{
 	
     color: yellow;
     background-color: blue;
@@ -13,17 +12,10 @@
 	margin-top: 20px;
 }*/
 /* Footer section to remain at the bottom of all the left and right content*/
-footer{
-    clear:both;
+#footer{
     height:60px;
-    background-color: #666666;
-    margin-top: 20px;
     text-align: center;
-    border-top: 8px solid #4aaaa5;
-    color:#eee;
-    right: 277px;
     bottom: 0;
-    left: 277px;
     padding: 1rem;
     
 }
@@ -60,4 +52,7 @@ body{
 
 .nav>li>a{
     color:yellow !important;
+}
+.nav>li>a:hover{
+    color:blue !important;
 }

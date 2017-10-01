@@ -1,80 +1,21 @@
+// Fetching information from Twitter.
+// console.log('the bot is starting')
 
-console.log('the bot is starting')
+// var Twit = require('twit'); 
+// var config = require('./config');
+// var T = new twit(config);
 
-var Twit = require('twit'); 
-var config = require('./config');
-var T = new twit(config);
+// var params = {
+//   q: 'twitch',
+//   count: 5
+// }
 
-var params = {
-  q: 'twitch',
-  count: 5
-}
+// T.get('search/tweets', params, gotData);
 
-T.get('search/tweets', params, gotData);
+// function gotData(err, data, response) {
+// console.log(data)
 
-function gotData(err, data, response) {
-console.log(data)
-
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//  var updatePage = function( resp ) {
-//   $( '#target').html( resp.people[0].name );
 // };
-
-// var printError = function( req, status, err ) {
-//   console.log( 'something went wrong', status, err );
-// };
- 
-//  $.ajax({
-//     url: "https://api-2445582011268.apicast.io/games",
-//     headers: {
-//       'user-key': 'cae1795c16e1b107290bd65fc600a1e1'
-//     },
-//     type: "get",
-//     dataType: "json",
-// })
-
-
-
-
-
-// var ignAPIKEY = "d13abbdf045a48efadfe6380e367c2d8"
-// //   var gameQueried = $('#gsearch-input').val();
-//  $.ajax({
-//     url: "https://newsapi.org/v1/" + "articles?source=ign&sortBy=top&apiKey=ignAPIKEY",
-//     type: "get",
-//      : "gamer"},
-//     dataType: "jsonp"
-//     //field_list : "user_review"
-//   });
-
-
 
 // function gamer(data) {
 //   $(".container").empty();
@@ -457,9 +398,9 @@ function addTab(tabName,tablocation,tabcontent){
 
 //gamer callback function used for displaying the videos and news
 function gamer(data) {
-  console.log(data.results[0].name)
-  var desc = data.results[0].description;
-  var name = data.results[0].name;
+  // console.log(data.results[0].name)
+  // var desc = data.results[0].description;
+  // var name = data.results[0].name;
   //search the results and find the resource_type = "video" then copy the embed_player and the high_url, low_url, hd_url urls.
 
   // addTab("News", desc);
@@ -473,7 +414,9 @@ function gamer(data) {
     var resultDiv = $("<div class='col-sm-9'>");
  
   for (i=0; i< results.length;i++){
-      resourceType = results[i].resource_type;
+      
+        resourceType = results[i].resource_type;
+      
       if (resourceType === "game") {
         // var rating = results[i].rating;
         // var p = $("<p>").text("Rating: " + rating);
@@ -485,14 +428,14 @@ function gamer(data) {
         personImage.attr("src", results[i].image.icon_url);
         var mainUrl = $("<a href=" + weburl + " target=_blank>").text(weburl);
         
-    }
-    else if (resourceType==="video"){
-
+    }else if (resourceType==="video"){
       var embedVideo = results[i].youtube_id;
-      var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=https://www.youtube.com/embed/' + embedVideo + ' frameborder="0" allowfullscreen></iframe>');
-      var videoDiv = $('<div class=videos>');
-      videoDiv.append(iFrame);
-      $('#tab2').append(videoDiv);
+      if (embedVideo != null){
+        var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=https://www.youtube.com/embed/' + embedVideo + ' frameborder="0" allowfullscreen></iframe>');
+        var videoDiv = $('<div class=videos>');
+        videoDiv.append(iFrame);
+        $('#tab2').append(videoDiv);
+      }
     }
   
       imageDiv.append(personImage);
