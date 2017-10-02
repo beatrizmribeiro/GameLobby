@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+
+    <body>
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Post your Comments</h3>
+                </div>
+
+                <div class="panel-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="name-input">Name:</label>
+                            <input class="form-control" id="name-input" type="text"/>
+                        </div>
+				
+				        <div class="form-group">
+                            <label for="comments-input">Your Comments:</label>
+                            <textarea class="form-control" id="comments-input" rows="5"></textarea>
+                        </div>
+                        <button class="btn btn-primary" id="add-comment-btn" type="submit" style="margin-right: 90px;" ;">Post your Comment</button>
+                        <div id="display"></div>
+	               </form>
+                </div>
+
+		<div class="row">
+        <div class="col-lg-12">
+
+		<div class="panel panel-default" style="margin-top: 150px;">
+            <div class="panel-heading">
+              <h3 class="panel-title"><strong>Comments</strong></h3>
+            </div>
+            <div class="panel-body">
+              <table class="table table-hover" id='comments-table'>
+              	<div id="time-input" name="time" type="text" value="" size="45" /></div>
+
+                <thead>
+                  <tr>
+                    <th>Comments</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+          </div>
+            </div>
+        
+          
+<script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
+
+<script type="text/javascript">
+    var config = {
+        apiKey: "AIzaSyAf7Ye7jq1ZJiTiNyQj123zyB5sxN3P2M0",
+        authDomain: "comments-e35cc.firebaseapp.com",
+        databaseURL: "https://comments-e35cc.firebaseio.com",
+        projectId: "comments-e35cc",
+        storageBucket: "",
+        messagingSenderId: "514530584313"
+    };
+  
+    firebase.initializeApp(config);
+
+    var database = firebase.database();
+
+    //  Database Write
+    $("#add-comment-btn").on("click", function(event) {
+    	// WHat does this do?
+    	event.preventDefault();
+
+    	var yourName = $("#name-input").val().trim();
+     	var yourComments = $("#comments-input").val().trim();
+     	var yourTime = moment().format('MMMM Do YYYY, h:mm:ss a');
+
+    	var newComments = {
+      		name: yourName,
+        	comments: yourComments,
+        	time: yourTime,
+    	};
+
+    	console.log(newComments.name);
+     	console.log(newComments.comments);
+     	console.log(newComments.time);
+
+    	// send the write
+        database.ref('/game/comments').push(newComments);
+
+        // Clear the UI fields
+    	$("#name-input").val("");
+    	$("#comments-input").val("");
+    	$("#time-input").val("");
+    });
+    // END database write
+
+    // New comment added
+    database.ref('/game/comments').on("child_added", function(childSnapshot) {
+
+	   var yourName = childSnapshot.val().name;
+	   var yourComments = childSnapshot.val().comments;
+	   var yourTime = childSnapshot.val().time;
+	
+
+        console.log(yourName);
+        console.log(yourComments);
+        console.log(yourTime)
+       
+
+   
+
+	$("#comments-table").append("<tr><td>" + yourName + "</td><td>"+ yourTime + "</td><td></td><td>" + yourComments + "</td><td>");
+
+
+});
+  
+
+
+
+
+</script>
+</body>
+
+</html>
