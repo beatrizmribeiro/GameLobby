@@ -1,200 +1,17 @@
-// Fetching information from Twitter.
-// console.log('the bot is starting')
-
-// var Twit = require('twit'); 
-// var config = require('./config');
-// var T = new twit(config);
-
-// var params = {
-//   q: 'twitch',
-//   count: 5
-// }
-
-// T.get('search/tweets', params, gotData);
-
-// function gotData(err, data, response) {
-// console.log(data)
-
-// };
-
-// function gamer(data) {
-//   $(".container").empty();
-//   console.log(data)
-//  console.log(data.results[0].description)
-//     $(".container").append("<p>" + data.results[0].description + "</p>")
-  // screenurl = data.results[0].image.screen_url
-  // $(".container").append("<img src =" + screenurl + ">"  )
-  // $(".container").append(data.results[0].description)
-  // $('#gsearch-input').val("")
-   //}
-//=======
-
-$("#gsearchBtn").on("click", function(event) {
-  console.log("btnClick gsearchBtn Function")
-  // refresh
-  event.preventDefault();
-
-  var gainbombAPIKEY = "e20f3cfa13744ea433f8249befe9e104dc710642"
-  var gameQueried = $('#gsearch-input').val();
-  var source = $("#selSource option:selected").val();
-    //"crash bandicoot"
-
-  if (source==="ign"){
-    var ignApiKEY = "457859b89daf48f1bab20c292e4ba57d"
-    var queryURL = "https://newsapi.org/v1/articles?source=ign&apiKey="+ ignApiKEY + "&sortBy=top&category=gaming" 
-    $.ajax({
-        url: queryURL,
-        method: 'GET'
-      }).done(function(response) {
-        console.log(response);
-      });
-  }
-  else if (source==="gaintbomb"){
-    $.ajax({
-      url: "http://api.giantbomb.com/search/",
-      type: "get",
-      data: {api_key : gainbombAPIKEY, query: gameQueried , format : "jsonp", json_callback : "gamer" },
-      dataType: "jsonp"
-      //field_list : "name, image",
-    });
-  }else if (source==="twitchtv"){
-    $.ajax({
-      Accept: 'application/vnd.twitchtv.v5+json',
-      type: 'GET',
-      url: 'https://api.twitch.tv/kraken/search/streams?query= '+ gameQueried,
-      headers: { 'Client-ID': 'ba9klm2l5l7x75tlpvk87qpnjv8pbx'},
-      success: function(twitchData) {
-        console.log(twitchData);
-      }
-
-    });
-  }else if (source==="igdb"){
-    $.ajax({
-        url: 'https://api-2445582011268.apicast.io/games',
-        type: 'GET',
-        
-       // xhrFields: {withCredentials:true},
-        headers: {
-          "user-key": 'ad750a15ddd755884be804b65c7e59a5',
-          "Accept": 'application/json'
-        },
-        //'user-key': 'cae1795c16e1b107290bd65fc600a1e1', //Brad user key.
-        // fields: '*',
-        // limit: 10,
-        // offset: 15,
-        // search: gameQueried,
-        // Access-Control-Allow-Origin: "*",
-
-        success: function(igdbData) {
-          console.log(igdbData);
-        }
-      });
-  }else{
-    console.log('search not working');
-  }
-    
-   // end of the search button click function
-  
-  
-
-}); // search button function ending.
-function gamer(data) {
-  $(".crystalImgBody").empty();
-  console.log(data)
-
-  var results = data.results;
-  
-  for (i=0; i< results.length;i++){
-    var resultRow = $("<div class='row'>");
-    var imageDiv = $("<div class='col-sm-3'>");
-    var resultDiv = $("<div class='col-sm-9'>");
+/*
+ * @summary: This javascript file covers the functionality that creates User interface to display game related videos, news and tweets based on the query.
+ *  
+ *
+ * @author :Srivastava Cheemakurthi,Brad Collins, Beatriz Ribeiro
+ * @version: 1.0
+ * 
+ */
 
 
-    //var gifDiv = $("<div class='item'>");
-    var rating = results[i].rating;
-    // var p = $("<p>").text("Rating: " + rating);
-    var name = $("<p>").text("Name: " + results[i].name);
-    var deck = $("<p class='paragraph'>").text("Description: " + results[i].deck);
-    var releaseDate = $("<p>").text("ReleaseDate: " + results[i].original_release_date);
-    var weburl = results[i].api_detail_url;
-    var personImage = $("<img>");
-    personImage.attr("src", results[i].image.icon_url);
-    var mainUrl = $("<a href=" + weburl + " target=_blank>").text(weburl);
-   
-    imageDiv.append(personImage);
-    resultDiv.append(name);
-    resultDiv.append(deck);
-    resultDiv.append(releaseDate);
-    // resultDiv.append(p);
-    resultDiv.append(mainUrl);
+// infoDialog("Game Search Results", "", "CLOSE")
 
-    resultRow.append(imageDiv)
-    resultRow.append(resultDiv)
-    //$(".crystalImgBody").append(gifDiv);
-    // $(".crystalImgBody").append(resultRow);
-    $(".crystalImgBody").append(resultRow);          
-  }
-
-  infoDialog("Game Search Results", "", "CLOSE")
- // console.log(data.results[0].description)
-  // console.log(data.results[0].name)
-  // $(".crystalImgBody").append("<h1>" + data.results[0].name + "</h1>")
-  // screenurl = data.results[0].image.screen_url
-  // $(".crystalImgBody").append("<img src =" + screenurl + ">"  )
-  // $(".crystalImgBody").append(data.results[0].description)
-  // $('#gsearch-input').val("")
-  }
-
-
-
-$(document).ready(function(){
- 
-  addTab("News", "#tabs", ".tab-content");
-  addTab("Videos", "#tabs", ".tab-content");
-  addTab("Popularity","#tabs", ".tab-content");
-  addTab("TwitterNews","#miscTabs", ".misc-tab-content");
-  addTab("OtherNews","#miscTabs", ".misc-tab-content");
-  // var bounce = new Bounce();
-  // bounce.rotate({
-  // from: 0, to: 90
-  // });
-  // bounce.applyTo($(".navbar-brand"));
-})
-
-
-// function gamerUI(){
-//   // Creating needed Panels for the UI.
-// //  createPanel('Crystals-Collector', 'crystalGameDescription','col-sm-12')
-//   createPanel('Crystal-Images', 'crystalImgBody','col-sm-12')
-// }
-
-
-// function createPanel(headType, bodyType, colType){
-//   //creating a Panel with three parameters
-//   //1st parameter : Panel Identification class
-//   //2nd Parameter : Panel body identification class for updating the values.
-//   //3rd parameter giving the panel column width.
-//   var container = $(".container-fluid");    
-//   var column = $("<div class =" + colType + ">");
-//   var panel = $("<div class='panel panel\-default'>");
-//   var panelHeader = $("<div class='panel\-heading'>");
-//   var panelBody = $("<div class='panel\-body'>");
-//   panelHeader.addClass(headType);
-//   panelBody.addClass(bodyType);
-//   panelHeader.addClass('text-center');
-//  // panelBody.addClass('text-center');
-
-//     //container.append(colsm12);
-//     container.append(column);
-//     column.append(panel);
-//     panel.append(panelHeader);
-//     panel.append(panelBody);
-//     panelHeader.append ("<h3 class='panel\-title'>" + headType + "</h3>")
-//     panelBody.text ('');
-// }
-
-  /* Generic Confirm func */
-  function confirm(heading, question, cancelButtonTxt, okButtonTxt, callback) {
+// Generic Confirm dialog func 
+function confirm(heading, question, cancelButtonTxt, okButtonTxt, callback) {
 
     var confirmModal = 
       $('<div class="modal fade">' +        
@@ -226,16 +43,12 @@ $(document).ready(function(){
     console.log(confirmModal);
      confirmModal.modal('show');    
   };  
-/* END Generic Confirm func */
-
-$('#lgmodal').on("click", function(){
-  console.log('lgmodal dialog')
-  confirm("Delete all ?", "Do you want to delete all files? ", "No", "Yes", update )
-})
+// END Generic Confirm func 
 
 
- /* Generic Confirm func */
-  function infoDialog(heading, message, cancelButtonTxt) {
+
+// Generic information dialog func 
+function infoDialog(heading, message, cancelButtonTxt) {
 
     var confirmModal = 
       $('<div class="modal fade">' +        
@@ -263,7 +76,7 @@ $('#lgmodal').on("click", function(){
     }); 
     console.log(confirmModal);
      confirmModal.modal('show');    
-  };  
+  }; //information dialog function ends 
 
 
 var $modal = $('.modal');
@@ -287,18 +100,6 @@ $(document).on("click","#news", function(event) {
   // refresh
  event.preventDefault();
 
-  // var gainbombAPIKEY = "e20f3cfa13744ea433f8249befe9e104dc710642"
-  // var gameQueried = $('#gsearch-input').val();
-
-  //   //"crash bandicoot"
-
-  // $.ajax({
-  //   url: "http://api.giantbomb.com/search/",
-  //   type: "get",
-  //   data: {api_key : gainbombAPIKEY, query: gameQueried , format : "jsonp", json_callback : "gamer" },
-  //   dataType: "jsonp"
-  //   //field_list : "name, image",
-  // });
 
   var ignApiKEY = "457859b89daf48f1bab20c292e4ba57d"
   var queryURL = "https://newsapi.org/v1/articles?source=ign&apiKey="+ ignApiKEY + "&sortBy=top&category=gaming" 
@@ -308,153 +109,330 @@ $(document).on("click","#news", function(event) {
     }).done(function(response) {
       console.log(response);
     });
-
-  // var ignApiKEY = "457859b89daf48f1bab20c292e4ba57d"
-  // var queryURL = "https://newsapi.org/v1/sources?language=en&apiKey="+ ignApiKEY + "&sortBy=top&category=gaming" 
-  // $.ajax({
-  //     url: queryURL,
-  //     method: 'GET'
-  //   }).done(function(response) {
-  //     console.log(response);
-  //   });
-
   
 }); // News menu function ending.
-// Videos page refreshed after clicking on Videos link.
-$(document).on("click","#videos", function(event) {
-  console.log("videos link clicked")
-  // refresh
-  event.preventDefault();
 
-  var gainbombAPIKEY = "e20f3cfa13744ea433f8249befe9e104dc710642"
-  var gameQueried = 'minecraft';//$('#gsearch-input').val(); // modify this code to search all the popular game videos details.
+//============New code===
 
-  $.ajax({
-    Accept: 'application/vnd.twitchtv.v5+json',
-     type: 'GET',
-     url: 'https://api.twitch.tv/kraken/search/streams?query= '+ gameQueried,
-     headers: {
-       'Client-ID': 'ba9klm2l5l7x75tlpvk87qpnjv8pbx'
-    }, success: function(twitchData) {
-     console.log(twitchData);
-    }
-///streams
-  });
+// creating a Panel with Footer and no Header
+function createPanel(num, colsize, appendLocation){
+  var pdefault = $('<div class=panel panel-default>');
+  var pbody = $('<div class="panel-body">');
+  pbody.attr('id', 'panelTab'+ num)
+    var pfooter = $('<div class="panel-footer">');
+    pfooter.attr('id', 'pfooter'+ num)
+    pdefault.append(pbody);
+    pdefault.append(pfooter);
+    
+    var paneldiv = $('<div class=paneldiv>');
+    paneldiv.addClass(colsize)
+    // append the panel Default to the container-fluid
+    paneldiv.append(pdefault)
+    var pCommentBtn = $('<button class="btn btn-outline-success">')
+    pCommentBtn.text('Comment')
+    pCommentBtn.attr('id','pCommentBtn');
+    pfooter.append(pCommentBtn)
+    $(appendLocation).append(paneldiv);
 
-}); // Videos link function ending.
+}
 
-//==========================Amazon related==========================
-// var amazon = require('amazon-product-api');
-// var client = amazon.createClient({
-//   awsId: "AKIAJ75V5QTLBHDM7MIA",  
-//   awsSecret: "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",
-//   awsTag: "csrivatsava-20"
-// });
-// client.itemSearch({
-//   director: 'Quentin Tarantino',
-//   actor: 'Samuel L. Jackson',
-//   searchIndex: 'DVD',
-//   audienceRating: 'R',
-//   responseGroup: 'ItemAttributes,Offers,Images'
-// }, function(err, results, response) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log(results);  // products (Array of Object) 
-//     console.log(response); // response (Array where the first element is an Object that contains Request, Item, etc.) 
-//   }
-// });
+$(document).ready(function(){
+  layout();
+  reset();
+  $('#tab1').show();
 
-// client.itemLookup({
-//   idType: 'UPC',
-//   itemId: '635753490879',
-//   responseGroup: 'ItemAttributes,Offers,Images'
-// }, function(err, results, response) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log(results);
-//   }
-// });
-//==========================Amazon related==========================
-//===============
+});
+// creating the layout for displaying the Tabs.
+function layout(){
+  var tabNames = ['News','Videos','Reviews','Tweets'];
+  var navs = $('<ul class="nav nav-tabs nav-justified">');
+  navs.attr('id', 'tabs');
+  var displayDiv = $('<div id=displayDiv>');
+  var navTabDiv = $('<div class=navTabDiv>');
+  var tabcontent = $('<div class=tab-content>');
 
+  for (var i = 0; i<tabNames.length;i++){
+    var nextTab = $('#tabs li').length+1;
+    console.log (nextTab)
+    // create the tab
+    $('<li><a href="#tab'+ nextTab +'" data-toggle="tab">'+tabNames[i]+'</a></li>').appendTo(navs);
+    // create the tab content
+    $('<div class="tab-pane" id="tab'+ nextTab +'">' +  '</div>').appendTo(tabcontent); //tabNames[i] + 
+    navTabDiv.append(navs);
+    displayDiv.append(navTabDiv);
+    displayDiv.append(tabcontent);
+
+    $('.container-fluid').append(displayDiv);
+  }
+  
+
+}
+//When a tab is selected displaying the content.
 $('#tabs a').click(function (e) {
   e.preventDefault()
   $(this).tab('show')
 })
 
-//adding a tab function
-function addTab(tabName,tablocation,tabcontent){
-  var nextTab = $('#tabs li').length+1;
-  // create the tab
-    $('<li><a href="#tab'+ nextTab +'" data-toggle="tab">'+tabName+'</a></li>').appendTo(tablocation);
-    // create the tab content
-    $('<div class="tab-pane" id="tab'+ nextTab +'">' + '</div>').appendTo(tabcontent);
-    
-    // make the new tab active
-    //$('#tabs a:first').tab('show');
+$(document).on("click",function(){
+  // console.log($(this)[0].activeElement);
+  var activeElement = $(this)[0].activeElement;
+  // console.log(activeElement.text)
+  if (activeElement.text=== 'News') {
+    $('#tab1').show();
+    $('#tab2').hide();
+    $('#tab3').hide();
+    $('#tab4').hide();
+  }
+  else if (activeElement.text=== 'Videos') {
+    $('#tab2').show();
+    $('#tab1').hide();
+    $('#tab3').hide();
+    $('#tab4').hide();
+  }
+  else if (activeElement.text=== 'Reviews') {
+    $('#tab3').show();
+    $('#tab1').hide();
+    $('#tab2').hide();
+    $('#tab4').hide();
+
+  }
+  else if (activeElement.text=== 'Tweets') {
+    $('#tab4').show();
+    $('#tab1').hide();
+    $('#tab2').hide();
+    $('#tab3').hide();
+  }else if (activeElement.text=== 'PC') {
+    iPlatformSearch("PC")
+    $('#tab4').show();
+    $('#tab1').hide();
+    $('#tab2').hide();
+    $('#tab3').hide();
+  }else if (activeElement.text=== 'PS4') {
+    iPlatformSearch("PS4");
+    $('#tab4').show();
+    $('#tab1').hide();
+    $('#tab2').hide();
+    $('#tab3').hide();
+  }else if (activeElement.text=== 'Xbox One') {
+    iPlatformSearch("Xbox One");
+    $('#tab4').show();
+    $('#tab1').hide();
+    $('#tab2').hide();
+    $('#tab3').hide();
+  }else if (activeElement.text=== 'WII U') {
+    iPlatformSearch("WII U");
+    $('#tab4').show();
+    $('#tab1').hide();
+    $('#tab2').hide();
+    $('#tab3').hide();
+  }else if (activeElement.text=== 'PS3') {
+    iPlatformSearch("PS3");
+    $('#tab4').show();
+    $('#tab1').hide();
+    $('#tab2').hide();
+    $('#tab3').hide();
+  }else if (activeElement.text=== 'Xbox 360') {
+    iPlatformSearch("Xbox 360");
+    $('#tab4').show();
+    $('#tab1').hide();
+    $('#tab2').hide();
+    $('#tab3').hide();
+  }else if (activeElement.text=== '3DS') {
+    iPlatformSearch("3DS");
+    $('#tab4').show();
+    $('#tab1').hide();
+    $('#tab2').hide();
+    $('#tab3').hide();
+  }else if (activeElement.text=== 'GAMETECH') {
+    iPlatformSearch("GAMETECH");
+    $('#tab4').show();
+    $('#tab1').hide();
+    $('#tab2').hide();
+    $('#tab3').hide();
+  }else{
+    console.log('No active elements');
+  } 
+
+
+})
+// function to search data from IGDB platforms
+function iPlatformSearch(iElement){
+  $.ajax({
+    url: '/igdb',
+    type: 'GET',
+    data:{search: iElement},
+    success: function(igdbData) {
+      console.log(igdbData);
+    }
+  });
 }
 
-//gamer callback function used for displaying the videos and news
+function reset(){
+  $('#tab1').empty();
+  $('#tab2').empty();
+  $('#tab3').empty();
+  $('#tab4').empty();
+}
+
+// Search button click function retrieves data based on the selection.
+$(document).on("click", "#gsearchBtn",function(event) {
+  // don't refresh
+  event.preventDefault();
+
+  var gainbombAPIKEY = "e20f3cfa13744ea433f8249befe9e104dc710642"
+  var gameQueried = $('#gsearch-input').val();
+  var source = $("#selSource option:selected").val();
+  // connecing to IGN to get articles based on the Query.
+  if (source==="ign"){
+    var ignApiKEY = "457859b89daf48f1bab20c292e4ba57d"
+    var queryURL = "https://newsapi.org/v1/articles?source=ign&category=gaming&apiKey="+ ignApiKEY + "&sortBy=latest" //+ '&title=' + gameQueried 
+    $.ajax({
+        url: queryURL,
+        method: 'GET'
+      }).done(function(response) {
+        console.log(response);
+      });
+  }
+  // connecing to gaintbomb to get articles based on the Query.
+  else if (source==="gaintbomb"){
+    $.ajax({
+      url: "http://api.giantbomb.com/search/",
+      type: "get",
+      data: {api_key : gainbombAPIKEY, query: gameQueried, resources : "game",  format : "jsonp", json_callback : "gamer" },
+      dataType: "jsonp"
+    });
+  } // connecing to twitchtv to get articles based on the Query.
+  else if (source==="twitchtv"){
+    $('#tab2').empty();
+    // var gamequery = "minecraft" //"battle grounds" //"resident evil"
+    $.ajax({
+    type: 'GET',
+    Accept: 'application/vnd.twitchtv.v5+json',
+    url: 'https://api.twitch.tv/kraken/search/streams?query=' + gameQueried,
+    headers: {
+      'Client-ID': 'ba9klm2l5l7x75tlpvk87qpnjv8pbx',
+      'Accept': 'application/vnd.twitchtv.v5+json',
+    },
+    success: function(data) {
+      console.log("success" + data["streams"].length);
+      console.log(data);
+      for (var i=0; i< data["streams"].length;i++){
+        var panelNum = i + 1
+        createPanel(panelNum, 'col-sm-6', '#tab2');
+        var resultRow = $("<div class='row'>");
+        var newRow = resultRow.attr('id','row'+panelNum)
+        console.log(newRow)
+        console.log('data channel' + data["streams"][i]["channel"])
+        var channel = data["streams"][i]["channel"]["name"];
+        var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=http://player.twitch.tv/?channel=' + channel + ' frameborder="0" allowfullscreen></iframe>');
+        var videoDiv = $('<div class=videos>');
+        videoDiv.append(iFrame);
+        $('#panelTab'+ panelNum).append(videoDiv);
+        $('#panelTab'+ panelNum).append($("<p>").text("Game: " + data["streams"][i]["channel"]["game"]));
+        $('#panelTab'+ panelNum).append($("<p>").text("Description: " +data["streams"][i]["channel"]["description"]));
+      }
+     }
+    });
+    $('#tab2').show();
+    $('#tab1').hide();
+    $('#tab3').hide();
+    $('#tab4').hide();
+
+
+   } // connecing to twitchtv to get articles based on the Query.
+  else if (source==="igdb"){
+     $.ajax({
+        url: '/igdb',
+        type: 'GET',
+        data:{search: gameQueried},
+        // query: ['search', 'batman'],
+        // platforms: iElement, 
+        success: function(igdbData) {
+          console.log(igdbData);
+        }
+      });
+  }else if (source==="twitter"){
+    $.ajax({
+        url: '/tweets',
+        type: 'GET',
+        data:{search: gameQueried},
+        success: function(twitterData) {
+          console.log(twitterData);
+        }
+      });
+  }
+  else{
+    console.log('search not working');
+  }
+   // end of the search button click function
+}); 
+
+
+
+//Gamer function callback for gaintbomb query
 function gamer(data) {
-  // console.log(data.results[0].name)
-  // var desc = data.results[0].description;
-  // var name = data.results[0].name;
   //search the results and find the resource_type = "video" then copy the embed_player and the high_url, low_url, hd_url urls.
-
-  // addTab("News", desc);
-  // addTab("Videos", name);
-  // addTab("Popularity", desc);
-
   var resourceType = '';
   var results = data.results;
   var resultRow = $("<div class='row'>");
-    var imageDiv = $("<div class='col-sm-3'>");
-    var resultDiv = $("<div class='col-sm-9'>");
+  var imageDiv = $("<div class='col-sm-3'>");
+  var resultDiv = $("<div class='col-sm-9'>");
  
-  for (i=0; i< results.length;i++){
-      
-        resourceType = results[i].resource_type;
-      
-      if (resourceType === "game") {
-        // var rating = results[i].rating;
-        // var p = $("<p>").text("Rating: " + rating);
-        var name = $("<p>").text("Name: " + results[i].name);
-        var deck = $("<p class='paragraph'>").text("Description: " + results[i].deck);
-        var releaseDate = $("<p>").text("ReleaseDate: " + results[i].original_release_date);
-        var weburl = results[i].api_detail_url;
-        var personImage = $("<img>");
-        personImage.attr("src", results[i].image.icon_url);
-        var mainUrl = $("<a href=" + weburl + " target=_blank>").text(weburl);
-        
+  for (var i=0; i< results.length;i++){
+    var panelNum = i + 1
+    createPanel(panelNum, 'col-sm-6', '#tab1');
+    var newRow = resultRow.attr('id','row'+panelNum)
+  console.log(newRow)
+  
+    resourceType = results[i].resource_type;
+  if (resourceType === "game") {
+    var name = $("<p>").text("Name: " + results[i].name);
+    var deck = $("<p class='paragraph'>").text("Description: " + results[i].deck);
+    var releaseDate = $("<p>").text("ReleaseDate: " + results[i].original_release_date);
+    var personImage = $("<img>");
+    personImage.attr("src", results[i].image.icon_url);
+
     }else if (resourceType==="video"){
-      var embedVideo = results[i].youtube_id;
-      if (embedVideo != null){
-        var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=https://www.youtube.com/embed/' + embedVideo + ' frameborder="0" allowfullscreen></iframe>');
-        var videoDiv = $('<div class=videos>');
-        videoDiv.append(iFrame);
-        $('#tab2').append(videoDiv);
+    var embedVideo = results[i].youtube_id;
+    if (embedVideo != null){
+      var embedVideoURL = 'https://www.youtube.com/embed/' + embedVideo;
+      console.log(embedVideoURL)
+      var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=' + embedVideoURL + ' frameborder="0" allowfullscreen></iframe>');
+      var videoDiv = $('<div class=videos>');
+      videoDiv.append(iFrame);
+      $('#panelTab'+ panelNum).append(videoDiv);
       }
     }
-  
-      imageDiv.append(personImage);
-      resultDiv.append(name);
-      resultDiv.append(deck);
-      resultDiv.append(releaseDate);
-      // resultDiv.append(p);
-      resultDiv.append(mainUrl);
 
-      resultRow.append(imageDiv)
-      resultRow.append(resultDiv)
-      //$(".crystalImgBody").append(gifDiv);
-      // $(".crystalImgBody").append(resultRow);
-      $("#tab1").append(resultRow);          
-
+  $('#panelTab'+ panelNum).append(personImage);
+    $('#panelTab'+ panelNum).append(name);
+    $('#panelTab'+ panelNum).append(deck);
+    $('#panelTab'+ panelNum).append(releaseDate);
   }
-
-
     console.log(data);
 }
-//======
+
+
+//=========================
+// Form for creating comments.
+function commentFrm(){
+  var pbody = $('<div class="panel-body">')
+  var frm = $('<form role="form">')
+  var frmDiv = $('<div class="form-group">')
+  var frmLabel = $('<label for="name-input">Name:</label>')
+  var frmNameInput = $('<input class="form-control" id="name-input" type="text"/>')
+  var frmCmtLabel = $('<label for="comments-input">Your Comments:</label>')
+  var frmTxtArea = $('<textarea class="form-control" id="comments-input" rows="5"></textarea>')
+  var frmBtn = $('<button class="btn btn-primary" id="add-comment-btn" type="submit" style="margin-right: 90px;" ;">Post your Comment</button>')
+
+  frm.append(frmDiv)
+  frmDiv.append(frmLabel)
+  frmDiv.append(frmNameInput)
+  frm.append(frmDiv)
+  frmDiv.append(frmCmtLabel)
+  frmDiv.append(frmTxtArea)
+  frm.append(frmBtn)
+  pbody.append(frm)
+  
+}
 
