@@ -19,9 +19,10 @@ app.get('/tweets', function(req, res){
 	// console.log("request: ", req.url);
 	// console.log("response: " + res);
 	
-	T.get('search/tweets', { q: 'video game news', platforms: req.platforms, count: 10, dataType: "json"}, function(err, data, response) {
-	   // console.log(data);
-	  res.json(data);
+	T.get('search/tweets', { q: req.query.search, platforms: req.platforms, count: 50, dataType: "json"}, 
+		function(err, data, response) {
+	    console.log(data);
+	  	res.json(data);
 	 });
 	
 })

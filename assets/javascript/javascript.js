@@ -8,7 +8,6 @@
  */
 
 
-
 // Generic Confirm dialog func 
 function confirm(heading, question, cancelButtonTxt, okButtonTxt, callback) {
 
@@ -287,7 +286,7 @@ $(document).on("click", "#gsearchBtn",function(event) {
         url: queryURL,
         method: 'GET'
       }).done(function(ignData) {
-        dataDisplay(ignData)
+        ignResults(ignData)
       });
   }
   // connecing to gaintbomb to get articles based on the Query.
@@ -300,7 +299,6 @@ $(document).on("click", "#gsearchBtn",function(event) {
     });
   } // connecing to twitchtv to get articles based on the Query.
   else if (source==="twitchtv"){
-    // var gamequery = "minecraft" //"battle grounds" //"resident evil"
     $.ajax({
     type: 'GET',
     Accept: 'application/vnd.twitchtv.v5+json',
@@ -310,40 +308,17 @@ $(document).on("click", "#gsearchBtn",function(event) {
       'Accept': 'application/vnd.twitchtv.v5+json',
     },
     success: function(data) {
-      // console.log("success" + data["streams"].length);
-      // console.log(data);
-      $('#tab1').empty();
-      for (var i=0; i< data["streams"].length;i++){
-        var panelNum = i + 1
-        createPanel(panelNum, 'col-sm-4', '#tab1');
-        var resultRow = $("<div class='row'>");
-        var newRow = resultRow.attr('id','row'+panelNum)
-        console.log(newRow)
-        console.log('data channel' + data["streams"][i]["channel"])
-        var channel = data["streams"][i]["channel"]["name"];
-        var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=http://player.twitch.tv/?channel=' + channel + ' frameborder="0" allowfullscreen></iframe>');
-        var videoDiv = $('<div class=videos>');
-        videoDiv.append(iFrame);
-        $('#panelTab'+ panelNum).append(videoDiv);
-        $('#panelTab'+ panelNum).append($("<p>").text("Game: " + data["streams"][i]["channel"]["game"]));
-        $('#panelTab'+ panelNum).append($("<p>").text("Description: " +data["streams"][i]["channel"]["description"]));
-      }
-     }
-    });
-    $('#tab1').show();
-    $('#tab2').hide();
-    $('#tab3').hide();
-    $('#tab4').hide();
+      twitchData(data);
 
-
-   } // connecing to twitchtv to get articles based on the Query.
+   }
+  });
+  } // connecing to twitchtv to get articles based on the Query.
   else if (source==="igdb"){
      $.ajax({
         url: '/igdb',
         type: 'GET',
         data:{search: gameQueried},
         success: function(igdbData) {
-          // console.log(igdbData);
           igdbResults(igdbData);
         }
       });
@@ -608,4 +583,25 @@ function twitterResults(data){
   $('#tab1').hide();
   $('#tab2').hide();
   $('#tab3').hide();
+}
+
+function twitchData(data){
+    $('#tab1').empty();
+    for (var i=0; i< data["streams"].length;i++){
+      var panelNum = i + 1;
+      createPanel(panelNum, 'col-sm-4', '#tab1');
+      var resultRow = $("<div class='row'>");
+      var newRow = resultRow.attr('id','row'+panelNum)
+      var channel = data["streams"][i]["channel"]["name"];
+      var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=http://player.twitch.tv/?channel=' + channel + ' frameborder="0" allowfullscreen></iframe>');
+      var videoDiv = $('<div class=videos>');
+      videoDiv.append(iFrame);
+      $('#panelTab'+ panelNum).append(videoDiv);
+      $('#panelTab'+ panelNum).append($("<p>").text("Game: " + data["streams"][i]["channel"]["game"]));
+      $('#panelTab'+ panelNum).append($("<p>").text("Description: " +data["streams"][i]["channel"]["description"]));
+    }
+    $('#tab1').show();
+    $('#tab2').hide();
+    $('#tab3').hide();
+    $('#tab4').hide();
 }
