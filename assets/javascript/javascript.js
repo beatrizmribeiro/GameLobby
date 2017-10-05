@@ -8,7 +8,6 @@
  */
 
 
-// infoDialog("Game Search Results", "", "CLOSE")
 
 // Generic Confirm dialog func 
 function confirm(heading, question, cancelButtonTxt, okButtonTxt, callback) {
@@ -118,21 +117,22 @@ $(document).on("click","#news", function(event) {
 function createPanel(num, colsize, appendLocation){
   var pdefault = $('<div class=panel panel-default>');
   var pbody = $('<div class="panel-body">');
-  pbody.attr('id', 'panelTab'+ num)
-    var pfooter = $('<div class="panel-footer">');
-    pfooter.attr('id', 'pfooter'+ num)
-    pdefault.append(pbody);
-    pdefault.append(pfooter);
-    
-    var paneldiv = $('<div class=paneldiv>');
-    paneldiv.addClass(colsize)
-    // append the panel Default to the container-fluid
-    paneldiv.append(pdefault)
-    var pCommentBtn = $('<button class="btn btn-outline-success">')
-    pCommentBtn.text('Comment')
-    pCommentBtn.attr('id','pCommentBtn');
-    pfooter.append(pCommentBtn)
-    $(appendLocation).append(paneldiv);
+  pbody.attr('id', 'panelTab'+ num);
+  pbody.addClass('fixed-panel');
+  var pfooter = $('<div class="panel-footer">');
+  pfooter.attr('id', 'pfooter'+ num);
+  pdefault.append(pbody);
+  pdefault.append(pfooter);
+  
+  var paneldiv = $('<div class=paneldiv>');
+  paneldiv.addClass(colsize);
+  // append the panel Default to the container-fluid
+  paneldiv.append(pdefault);
+  var pCommentBtn = $('<button class="btn btn-outline-success">')
+  pCommentBtn.text('Comment');
+  pCommentBtn.attr('id','pCommentBtn');
+  pfooter.append(pCommentBtn);
+  $(appendLocation).append(paneldiv);
 
 }
 
@@ -144,7 +144,7 @@ $(document).ready(function(){
 });
 // creating the layout for displaying the Tabs.
 function layout(){
-  var tabNames = ['News','Videos','Reviews','Tweets'];
+  var tabNames = ['Video','News','Platforms','Tweets'];
   var navs = $('<ul class="nav nav-tabs nav-justified">');
   navs.attr('id', 'tabs');
   var displayDiv = $('<div id=displayDiv>');
@@ -153,7 +153,7 @@ function layout(){
 
   for (var i = 0; i<tabNames.length;i++){
     var nextTab = $('#tabs li').length+1;
-    console.log (nextTab)
+    // console.log (nextTab)
     // create the tab
     $('<li><a href="#tab'+ nextTab +'" data-toggle="tab">'+tabNames[i]+'</a></li>').appendTo(navs);
     // create the tab content
@@ -174,27 +174,24 @@ $('#tabs a').click(function (e) {
 })
 
 $(document).on("click",function(){
-  // console.log($(this)[0].activeElement);
   var activeElement = $(this)[0].activeElement;
-  // console.log(activeElement.text)
-  if (activeElement.text=== 'News') {
+  if (activeElement.text=== 'Videos') {
     $('#tab1').show();
     $('#tab2').hide();
     $('#tab3').hide();
     $('#tab4').hide();
   }
-  else if (activeElement.text=== 'Videos') {
+  else if (activeElement.text=== 'News') {
     $('#tab2').show();
     $('#tab1').hide();
     $('#tab3').hide();
     $('#tab4').hide();
   }
-  else if (activeElement.text=== 'Reviews') {
+  else if (activeElement.text=== 'Platforms') {
     $('#tab3').show();
     $('#tab1').hide();
     $('#tab2').hide();
     $('#tab4').hide();
-
   }
   else if (activeElement.text=== 'Tweets') {
     $('#tab4').show();
@@ -253,7 +250,6 @@ $(document).on("click",function(){
     console.log('No active elements');
   } 
 
-
 })
 // function to search data from IGDB platforms
 function iPlatformSearch(iElement){
@@ -262,7 +258,8 @@ function iPlatformSearch(iElement){
     type: 'GET',
     data:{search: iElement},
     success: function(igdbData) {
-      console.log(igdbData);
+      // console.log(igdbData);
+      platformResults(igdbData);
     }
   });
 }
@@ -289,8 +286,8 @@ $(document).on("click", "#gsearchBtn",function(event) {
     $.ajax({
         url: queryURL,
         method: 'GET'
-      }).done(function(response) {
-        console.log(response);
+      }).done(function(ignData) {
+        dataDisplay(ignData)
       });
   }
   // connecing to gaintbomb to get articles based on the Query.
@@ -303,7 +300,6 @@ $(document).on("click", "#gsearchBtn",function(event) {
     });
   } // connecing to twitchtv to get articles based on the Query.
   else if (source==="twitchtv"){
-    $('#tab2').empty();
     // var gamequery = "minecraft" //"battle grounds" //"resident evil"
     $.ajax({
     type: 'GET',
@@ -314,11 +310,12 @@ $(document).on("click", "#gsearchBtn",function(event) {
       'Accept': 'application/vnd.twitchtv.v5+json',
     },
     success: function(data) {
-      console.log("success" + data["streams"].length);
-      console.log(data);
+      // console.log("success" + data["streams"].length);
+      // console.log(data);
+      $('#tab1').empty();
       for (var i=0; i< data["streams"].length;i++){
         var panelNum = i + 1
-        createPanel(panelNum, 'col-sm-6', '#tab2');
+        createPanel(panelNum, 'col-sm-4', '#tab1');
         var resultRow = $("<div class='row'>");
         var newRow = resultRow.attr('id','row'+panelNum)
         console.log(newRow)
@@ -333,8 +330,8 @@ $(document).on("click", "#gsearchBtn",function(event) {
       }
      }
     });
-    $('#tab2').show();
-    $('#tab1').hide();
+    $('#tab1').show();
+    $('#tab2').hide();
     $('#tab3').hide();
     $('#tab4').hide();
 
@@ -345,10 +342,9 @@ $(document).on("click", "#gsearchBtn",function(event) {
         url: '/igdb',
         type: 'GET',
         data:{search: gameQueried},
-        // query: ['search', 'batman'],
-        // platforms: iElement, 
         success: function(igdbData) {
-          console.log(igdbData);
+          // console.log(igdbData);
+          igdbResults(igdbData);
         }
       });
   }else if (source==="twitter"){
@@ -357,7 +353,7 @@ $(document).on("click", "#gsearchBtn",function(event) {
         type: 'GET',
         data:{search: gameQueried},
         success: function(twitterData) {
-          console.log(twitterData);
+          twitterResults(twitterData);
         }
       });
   }
@@ -372,67 +368,244 @@ $(document).on("click", "#gsearchBtn",function(event) {
 //Gamer function callback for gaintbomb query
 function gamer(data) {
   //search the results and find the resource_type = "video" then copy the embed_player and the high_url, low_url, hd_url urls.
+  $("#tab2").empty();
   var resourceType = '';
   var results = data.results;
   var resultRow = $("<div class='row'>");
   var imageDiv = $("<div class='col-sm-3'>");
   var resultDiv = $("<div class='col-sm-9'>");
- 
+ // looking through the results and appending them to the panels.
   for (var i=0; i< results.length;i++){
-    var panelNum = i + 1
-    createPanel(panelNum, 'col-sm-6', '#tab1');
-    var newRow = resultRow.attr('id','row'+panelNum)
-  console.log(newRow)
+    var panelNum = i + 1;
+    createPanel(panelNum, 'col-sm-4', '#tab2');
+    var newRow = resultRow.attr('id','row'+panelNum);
+    // console.log(newRow)
   
-    resourceType = results[i].resource_type;
-  if (resourceType === "game") {
-    var name = $("<p>").text("Name: " + results[i].name);
-    var deck = $("<p class='paragraph'>").text("Description: " + results[i].deck);
-    var releaseDate = $("<p>").text("ReleaseDate: " + results[i].original_release_date);
-    var personImage = $("<img>");
-    personImage.attr("src", results[i].image.icon_url);
+      resourceType = results[i].resource_type;
+    if (resourceType === "game") {
+      var name = $("<p>").text("Name: " + results[i].name);
+      var deck = $("<p class='paragraph'>").text("Description: " + results[i].deck);
+      var releaseDate = $("<p>").text("ReleaseDate: " + results[i].original_release_date);
+      var personImage = $("<img>");
+      personImage.attr("src", results[i].image.icon_url);
 
     }else if (resourceType==="video"){
-    var embedVideo = results[i].youtube_id;
-    if (embedVideo != null){
-      var embedVideoURL = 'https://www.youtube.com/embed/' + embedVideo;
-      console.log(embedVideoURL)
-      var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=' + embedVideoURL + ' frameborder="0" allowfullscreen></iframe>');
-      var videoDiv = $('<div class=videos>');
-      videoDiv.append(iFrame);
-      $('#panelTab'+ panelNum).append(videoDiv);
+      var embedVideo = results[i].youtube_id;
+      if (embedVideo != null){
+        var embedVideoURL = 'https://www.youtube.com/embed/' + embedVideo;
+        // console.log(embedVideoURL)
+        var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=' + embedVideoURL + ' frameborder="0" allowfullscreen></iframe>');
+        var videoDiv = $('<div class=videos>');
+        videoDiv.append(iFrame);
+        $('#panelTab'+ panelNum).append(videoDiv);
       }
     }
 
-  $('#panelTab'+ panelNum).append(personImage);
+    $('#panelTab'+ panelNum).append(personImage);
     $('#panelTab'+ panelNum).append(name);
     $('#panelTab'+ panelNum).append(deck);
     $('#panelTab'+ panelNum).append(releaseDate);
-  }
-    console.log(data);
+    }
+    // console.log(data);
 }
 
 
 //=========================
 // Form for creating comments.
-function commentFrm(){
-  var pbody = $('<div class="panel-body">')
-  var frm = $('<form role="form">')
-  var frmDiv = $('<div class="form-group">')
-  var frmLabel = $('<label for="name-input">Name:</label>')
-  var frmNameInput = $('<input class="form-control" id="name-input" type="text"/>')
-  var frmCmtLabel = $('<label for="comments-input">Your Comments:</label>')
-  var frmTxtArea = $('<textarea class="form-control" id="comments-input" rows="5"></textarea>')
-  var frmBtn = $('<button class="btn btn-primary" id="add-comment-btn" type="submit" style="margin-right: 90px;" ;">Post your Comment</button>')
+function commentFrm(frmDlg){
+  var pbody = $('<div class="panel-body">');
+  var frm = $('<form role="form">');
+  var frmDiv = $('<div class="form-group">');
+  var frmLabel = $('<label for="name-input">Name:</label>');
+  var frmNameInput = $('<input class="form-control" id="name-input" type="text"/>');
+  var frmCmtLabel = $('<label for="comments-input">Your Comments:</label>');
+  var frmTxtArea = $('<textarea class="form-control" id="comments-input" rows="5"></textarea>');
+  var frmBtn = $('<button class="btn btn-primary" id="add-comment-btn" type="submit" style="margin-right: 90px;" ;">Post your Comment</button>');
 
-  frm.append(frmDiv)
-  frmDiv.append(frmLabel)
-  frmDiv.append(frmNameInput)
-  frm.append(frmDiv)
-  frmDiv.append(frmCmtLabel)
-  frmDiv.append(frmTxtArea)
-  frm.append(frmBtn)
-  pbody.append(frm)
-  
+  frm.append(frmDiv);
+  frmDiv.append(frmLabel);
+  frmDiv.append(frmNameInput);
+  frm.append(frmDiv);
+  frmDiv.append(frmCmtLabel);
+  frmDiv.append(frmTxtArea);
+  frm.append(frmBtn);
+  pbody.append(frm);
+  $(frmDlg).append(pbody);
 }
 
+
+
+
+//  Writing the comment information into the database.
+$(document).on("click","#add-comment-btn", function(event) {
+// preventing auto refresh when button clicked.
+  event.preventDefault();
+  //var game = $(this).parent.
+  // firebase comment database access configuration
+  var config = {
+    apiKey: "AIzaSyAf7Ye7jq1ZJiTiNyQj123zyB5sxN3P2M0",
+    authDomain: "comments-e35cc.firebaseapp.com",
+    databaseURL: "https://comments-e35cc.firebaseio.com",
+    projectId: "comments-e35cc",
+    storageBucket: "",
+    messagingSenderId: "514530584313"
+  };
+    
+  // firebase initialization section
+  firebase.initializeApp(config);
+  var database = firebase.database();
+
+  var cName = $("#name-input").val().trim();
+  var cMsg = $("#comments-input").val().trim();
+  var cTime = moment().format('MMMM Do YYYY, h:mm:ss a');
+
+  var newComments = {
+      name: cName,
+      comments: cMsg,
+      time: cTime
+      //get the game information and upate here.
+      //game: 
+  };
+
+  // console.log(newComments.name);
+  // console.log(newComments.comments);
+  // console.log(newComments.time);
+
+  // Push the new Comment contents to the database.
+  database.ref('/game/comments').push(newComments);
+
+  // Clear the UI fields
+  $("#name-input").val("");
+  $("#comments-input").val("");
+  $("#time-input").val("");
+});
+    // END database write
+
+// To display content from igdb Query results
+function igdbResults(data){
+  console.log(data);
+  // console.log("Name: " + data.body["0"].name)
+  // console.log("summary: " + data.body["0"].summary)
+  // console.log("coverURL: " + data.body["0"].cover.url)
+  // console.log("URL: " + data.body["0"].url)
+  $('#tab2').empty();
+  var item = data.body;
+  for (var i=0; i< item.length;i++){
+    var panelNum = i + 1;
+    createPanel(panelNum, 'col-sm-4', '#tab2');
+    var resultRow = $("<div class='row'>");
+    var newRow = resultRow.attr('id','row'+panelNum);
+    var name = item[i].name;
+    var summary = item[i].summary;
+    var Url = item[i].url;
+    try {
+      var coverUrl = item[i].cover.url;
+      var imageUrl = $("<img class=img-responsive>");
+      imageUrl.attr("src", coverUrl);
+      var imgDiv = $('<div class=videos>');
+      imgDiv.append(imageUrl);
+      $('#panelTab'+ panelNum).append(imgDiv);
+    }
+    catch(err){
+      console.log(err);
+    }
+    var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );  
+    $('#panelTab'+ panelNum).append($("<p>").text("Name: " + name));
+    $('#panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
+    $('#panelTab'+ panelNum).append(gameUrl);
+  }
+  $('#tab2').show();
+  $('#tab1').hide();
+  $('#tab3').hide();
+  $('#tab4').hide();
+
+}
+
+function platformResults(data){
+  console.log(data);
+  console.log("Id: " + data.body["0"].id);
+  console.log("Name: " + data.body["0"].name);
+  console.log("summary: " + data.body["0"].summary);
+  console.log("Popularity: " + data.body["0"].popularity);
+  console.log("URL: " + data.body["0"].url);
+  $('#tab3').empty();
+  var item = data.body;
+  for (var i=0; i< item.length;i++){
+    var panelNum = i + 1;
+    createPanel(panelNum, 'col-sm-4', '#tab3');
+    var resultRow = $("<div class='row'>");
+    var newRow = resultRow.attr('id','row'+panelNum);
+    var id = $("<p>").text("ID: " + item[i].id);
+    var popularity = $("<p>").text("Popularity: " + item[i].popularity);
+    var name = item[i].name;
+    var summary = item[i].summary;
+    var Url = item[i].url;
+    try {
+      var coverUrl = item[i].cover.url;
+      console.log(Url);
+      var imageUrl = $("<img class=img-responsive>");
+      imageUrl.attr("src", coverUrl);
+      var imgDiv = $('<div class=videos>');
+      imgDiv.append(imageUrl);
+      $('#panelTab'+ panelNum).append(imgDiv);
+    }
+    catch(err){
+      console.log(err);
+    }
+    var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );  
+    $('#panelTab'+ panelNum).append(id);
+    $('#panelTab'+ panelNum).append($("<p>").text("Name: " + name));
+    $('#panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
+    $('#panelTab'+ panelNum).append(gameUrl);
+    
+
+  }
+  $('#tab3').show();
+  $('#tab1').hide();
+  $('#tab2').hide();
+  $('#tab4').hide();
+}
+
+function twitterResults(data){
+  console.log(data);
+  console.log("Id: " + data.statuses["0"].id);
+  console.log("Name: " + data.statuses["0"].name);
+  console.log("summary: " + data.statuses["0"].summary);
+  console.log("text: " + data.statuses["0"].text);
+  console.log("URL: " + data.statuses["0"].source);
+  $('#tab4').empty();
+  var item = data.statuses;
+  for (var i=0; i< item.length;i++){
+    var panelNum = i + 1;
+    createPanel(panelNum, 'col-sm-4', '#tab4');
+    var resultRow = $("<div class='row'>");
+    var newRow = resultRow.attr('id','row'+panelNum);
+    var id = $("<p>").text("ID: " + item[i].id);
+    var popularity = $("<p>").text("Popularity: " + item[i].popularity);
+    var name = item[i].name;
+    var summary = item[i].text;
+    var Url = item[i].source;
+    try {
+      var coverUrl = item[i].user.profile_image_url;
+      var imageUrl = $("<img class=img-responsive>");
+      imageUrl.attr("src", coverUrl);
+      var imgDiv = $('<div class=videos>');
+      imgDiv.append(imageUrl);
+      $('#panelTab'+ panelNum).append(imgDiv);
+    }
+    catch(err){
+      console.log(err);
+    }
+    // var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );  
+    $('#panelTab'+ panelNum).append(id);
+    $('#panelTab'+ panelNum).append($("<p>").text("Name: " + name));
+    $('#panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
+    $('#panelTab'+ panelNum).append(Url);
+    
+
+  }
+  $('#tab4').show();
+  $('#tab1').hide();
+  $('#tab2').hide();
+  $('#tab3').hide();
+}
