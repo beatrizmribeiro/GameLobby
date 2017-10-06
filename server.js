@@ -29,38 +29,49 @@ app.get('/tweets', function(req, res){
 //==========================================
 
 
-// //==========================Amazon related==========================
-// var amazon = require('amazon-product-api');
-// var client = amazon.createClient({
-//   awsId: "AKIAJ75V5QTLBHDM7MIA",  
-//   awsSecret: "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",
-//   awsTag: "csrivatsava-20"
-// });
-// client.itemSearch({
-//   director: 'Quentin Tarantino',
-//   actor: 'Samuel L. Jackson',
-//   searchIndex: 'DVD',
-//   audienceRating: 'R',
-//   responseGroup: 'ItemAttributes,Offers,Images'
-// }, function(err, results, response) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log(results);  // products (Array of Object) 
-//     console.log(response); // response (Array where the first element is an Object that contains Request, Item, etc.) 
-//   }
-// });
-// client.itemLookup({
-//   idType: 'UPC',
-//   itemId: '635753490879',
-//   responseGroup: 'ItemAttributes,Offers,Images'
-// }, function(err, results, response) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log(results);
-//   }
-// });
+//==========================Amazon related==========================
+var amazon = require('amazon-product-api');
+var dotenv = require('dotenv').config();
+
+require('dotenv/config');
+
+
+var client = amazon.createClient({
+  awsTag: process.env.AWS_TAG,
+  awsId: process.env.AWS_ID,
+  awsSecret: process.env.AWS_SECRET
+});
+console.log(process.env.AWS_TAG)
+app.get('/amazon', function(req, res){
+	client.itemSearch({
+	  // director: 'Quentin Tarantino',
+	  // actor: 'Samuel L. Jackson',
+	  // searchIndex: 'DVD',
+	  // audienceRating: 'R',
+	  keywords: req.query.search,
+	  responseGroup: 'ItemAttributes,Offers,Images'
+	}, function(err, results, response) {
+	  if (err) {
+	    console.log(err);
+	  } else {
+	    console.log(results);  // products (Array of Object) 
+	    console.log(response); // response (Array where the first element is an Object that contains Request, Item, etc.) 
+	  	res.json(results);
+	  }
+	});
+	// client.itemLookup({
+	//   idType: 'UPC',
+	//   itemId: '635753490879',
+	//   responseGroup: 'ItemAttributes,Offers,Images'
+	// }, function(err, results, response) {
+	//   if (err) {
+	//     console.log(err);
+	//   } else {
+	//     console.log(results);
+	//     res.json(results);
+	//   }
+	// });
+});
 //==========================Amazon related==========================
 
 //=============igdb related =========================

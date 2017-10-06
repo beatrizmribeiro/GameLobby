@@ -116,7 +116,7 @@ $(document).on("click","#news", function(event) {
 function createPanel(num, colsize, appendLocation){
   var pdefault = $('<div class=panel panel-default>');
   var pbody = $('<div class="panel-body">');
-  pbody.attr('id', 'panelTab'+ num);
+  pbody.attr('id', appendLocation + 'panelTab'+ num);
   pbody.addClass('fixed-panel');
   var pfooter = $('<div class="panel-footer">');
   pfooter.attr('id', 'pfooter'+ num);
@@ -131,7 +131,7 @@ function createPanel(num, colsize, appendLocation){
   pCommentBtn.text('Comment');
   pCommentBtn.attr('id','pCommentBtn');
   pfooter.append(pCommentBtn);
-  $(appendLocation).append(paneldiv);
+  $('#'+appendLocation).append(paneldiv);
 
 }
 
@@ -142,7 +142,7 @@ $(document).ready(function(){
   $('#tab1').show();
 
   topNews();
-  topVideos();
+  
   
 
 });
@@ -185,7 +185,9 @@ $(document).on("click",function(){
     $('#tab3').hide();
     $('#tab4').hide();
   }else if (activeElement.text=== 'Twitch Video') {
+    $('#tab2').empty();
     $('#tab2').show();
+    topVideos();
     $('#tab1').hide();
     $('#tab3').hide();
     $('#tab4').hide();
@@ -208,7 +210,8 @@ $(document).on("click",function(){
     $('#tab2').hide();
     $('#tab4').hide();
   }else if (activeElement.text=== 'PS4') {
-    iPlatformSearch("PS4");
+    // iPlatformSearch("PS4");
+    amazonItemLookUP("zelda")
     $('#tab3').show();
     $('#tab1').hide();
     $('#tab2').hide();
@@ -357,7 +360,7 @@ function gamer(data) {
  // looking through the results and appending them to the panels.
   for (var i=0; i< results.length;i++){
     var panelNum = i + 1;
-    createPanel(panelNum, 'col-sm-4', '#tab3');
+    createPanel(panelNum, 'col-sm-4', 'tab3');
     var newRow = resultRow.attr('id','row'+panelNum);
     // console.log(newRow)
   
@@ -377,14 +380,14 @@ function gamer(data) {
         var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=' + embedVideoURL + ' frameborder="0" allowfullscreen></iframe>');
         var videoDiv = $('<div class=videos>');
         videoDiv.append(iFrame);
-        $('#panelTab'+ panelNum).append(videoDiv);
+        $('#tab3' +'panelTab'+ panelNum).append(videoDiv);
       }
     }
 
-    $('#panelTab'+ panelNum).append(personImage);
-    $('#panelTab'+ panelNum).append(name);
-    $('#panelTab'+ panelNum).append(deck);
-    $('#panelTab'+ panelNum).append(releaseDate);
+    $('#tab3' +'panelTab'+ panelNum).append(personImage);
+    $('#tab3' +'panelTab'+ panelNum).append(name);
+    $('#tab3' +'panelTab'+ panelNum).append(deck);
+    $('#tab3' +'panelTab'+ panelNum).append(releaseDate);
     }
     // console.log(data);
 }
@@ -400,7 +403,7 @@ function commentFrm(frmDlg){
   var frmNameInput = $('<input class="form-control" id="name-input" type="text"/>');
   var frmCmtLabel = $('<label for="comments-input">Your Comments:</label>');
   var frmTxtArea = $('<textarea class="form-control" id="comments-input" rows="5"></textarea>');
-  var frmBtn = $('<button class="btn btn-primary" id="add-comment-btn" type="submit" style="margin-right: 90px;" ;">Post your Comment</button>');
+  var frmBtn = $('<button class="btn btn-primary" id="commentBtn" type="submit" style="margin-right: 90px;" ;">Post your Comment</button>');
 
   frm.append(frmDiv);
   frmDiv.append(frmLabel);
@@ -417,7 +420,7 @@ function commentFrm(frmDlg){
 
 
 //  Writing the comment information into the database.
-$(document).on("click","#add-comment-btn", function(event) {
+$(document).on("click","#commentBtn", function(event) {
 // preventing auto refresh when button clicked.
   event.preventDefault();
   //var game = $(this).parent.
@@ -472,7 +475,7 @@ function igdbResults(data){
   var item = data.body;
   for (var i=0; i< item.length;i++){
     var panelNum = i + 1;
-    createPanel(panelNum, 'col-sm-4', '#tab3');
+    createPanel(panelNum, 'col-sm-4', 'tab3');
     var resultRow = $("<div class='row'>");
     var newRow = resultRow.attr('id','row'+panelNum);
     var name = item[i].name;
@@ -484,15 +487,15 @@ function igdbResults(data){
       imageUrl.attr("src", coverUrl);
       var imgDiv = $('<div class=videos>');
       imgDiv.append(imageUrl);
-      $('#panelTab'+ panelNum).append(imgDiv);
+      $('tab3' +'panelTab'+ panelNum).append(imgDiv);
     }
     catch(err){
       console.log(err);
     }
     var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );  
-    $('#panelTab'+ panelNum).append($("<p>").text("Name: " + name));
-    $('#panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
-    $('#panelTab'+ panelNum).append(gameUrl);
+    $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Name: " + name));
+    $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
+    $('#tab3' +'panelTab'+ panelNum).append(gameUrl);
   }
   $('#tab3').show();
   $('#tab1').hide();
@@ -511,7 +514,7 @@ function platformResults(data){
   var item = data.body;
   for (var i=0; i< item.length;i++){
     var panelNum = i + 1;
-    createPanel(panelNum, 'col-sm-4', '#tab3');
+    createPanel(panelNum, 'col-sm-4', 'tab3');
     var resultRow = $("<div class='row'>");
     var newRow = resultRow.attr('id','row'+panelNum);
     var id = $("<p>").text("ID: " + item[i].id);
@@ -526,16 +529,16 @@ function platformResults(data){
       imageUrl.attr("src", coverUrl);
       var imgDiv = $('<div class=videos>');
       imgDiv.append(imageUrl);
-      $('#panelTab'+ panelNum).append(imgDiv);
+      $('#tab3' +'panelTab'+ panelNum).append(imgDiv);
     }
     catch(err){
       console.log(err);
     }
     var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );  
-    $('#panelTab'+ panelNum).append(id);
-    $('#panelTab'+ panelNum).append($("<p>").text("Name: " + name));
-    $('#panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
-    $('#panelTab'+ panelNum).append(gameUrl);
+    $('#tab3' +'panelTab'+ panelNum).append(id);
+    $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Name: " + name));
+    $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
+    $('#tab3' +'panelTab'+ panelNum).append(gameUrl);
   }
   $('#tab3').show();
   $('#tab1').hide();
@@ -554,7 +557,7 @@ function twitterResults(data){
   var item = data.statuses;
   for (var i=0; i< item.length;i++){
     var panelNum = i + 1;
-    createPanel(panelNum, 'col-sm-4', '#tab3');
+    createPanel(panelNum, 'col-sm-4', 'tab3');
     var resultRow = $("<div class='row'>");
     var newRow = resultRow.attr('id','row'+panelNum);
     var id = $("<p>").text("ID: " + item[i].id);
@@ -568,16 +571,16 @@ function twitterResults(data){
       imageUrl.attr("src", coverUrl);
       var imgDiv = $('<div class=videos>');
       imgDiv.append(imageUrl);
-      $('#panelTab'+ panelNum).append(imgDiv);
+      $('#tab3' +'panelTab'+ panelNum).append(imgDiv);
     }
     catch(err){
       console.log(err);
     }
     // var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );  
-    $('#panelTab'+ panelNum).append(id);
-    $('#panelTab'+ panelNum).append($("<p>").text("Name: " + name));
-    $('#panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
-    $('#panelTab'+ panelNum).append(Url);
+    $('#tab3' +'panelTab'+ panelNum).append(id);
+    $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Name: " + name));
+    $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
+    $('#tab3' +'panelTab'+ panelNum).append(Url);
     
 
   }
@@ -591,16 +594,19 @@ function twitchData(data){
     $('#tab2').empty();
     for (var i=0; i< data["streams"].length;i++){
       var panelNum = i + 1;
-      createPanel(panelNum, 'col-sm-4', '#tab2');
+      createPanel(panelNum, 'col-sm-4', 'tab2');
       var resultRow = $("<div class='row'>");
       var newRow = resultRow.attr('id','row'+panelNum)
       var channel = data["streams"][i]["channel"]["name"];
-      var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=http://player.twitch.tv/?channel=' + channel + ' frameborder="0" allowfullscreen></iframe>');
+      var channelPic = $('<img src=' + data["streams"][i].preview.medium + ' width="300" height="300">');
+      channelPic.attr("id", "image");
+      channelPic.attr("location", 'tab2' +'panelTab'+ panelNum)
+      channelPic.attr("href","http://player.twitch.tv/?channel=" + channel )
       var videoDiv = $('<div class=videos>');
-      videoDiv.append(iFrame);
-      $('#panelTab'+ panelNum).append(videoDiv);
-      $('#panelTab'+ panelNum).append($("<p>").text("Game: " + data["streams"][i]["channel"]["game"]));
-      $('#panelTab'+ panelNum).append($("<p>").text("Description: " +data["streams"][i]["channel"]["description"]));
+      videoDiv.append(channelPic);
+      $('#tab2' +'panelTab'+ panelNum).append(videoDiv);
+      $('#tab2' +'panelTab'+ panelNum).append($("<p>").text("Game: " + data["streams"][i]["channel"]["game"]));
+      $('#tab2' +'panelTab'+ panelNum).append($("<p>").text("Description: " +data["streams"][i]["channel"]["description"]));
     }
     $('#tab2').show();
     $('#tab1').hide();
@@ -620,7 +626,7 @@ function topNews(){
           var item = ignData.articles;
           for (var i=0; i< item.length;i++){
             panelNum = i + 1;
-            createPanel(panelNum, 'col-sm-4', '#tab1');
+            createPanel(panelNum, 'col-sm-4', 'tab1');
             var resultRow = $("<div class='row'>");
             var newRow = resultRow.attr('id','row'+panelNum);
             var author = $("<p>").text("Author: " + item[i].author);
@@ -634,17 +640,17 @@ function topNews(){
               imageUrl.attr("src", coverUrl);
               var imgDiv = $('<div class=videos>');
               imgDiv.append(imageUrl);
-              $('#panelTab'+ panelNum).append(imgDiv);
+              $('#tab1' +'panelTab'+ panelNum).append(imgDiv);
             }
             catch(err){
               console.log(err);
             }
-            $('#panelTab'+ panelNum).append(author);
-            $('#panelTab'+ panelNum).append($("<p>").text("Description: " + description));
-            $('#panelTab'+ panelNum).append(published);
-            $('#panelTab'+ panelNum).append($("<p>").text("Title: " + title));
+            $('#tab1' +'panelTab'+ panelNum).append(author);
+            $('#tab1' +'panelTab'+ panelNum).append($("<p>").text("Description: " + description));
+            $('#tab1' +'panelTab'+ panelNum).append(published);
+            $('#tab1' +'panelTab'+ panelNum).append($("<p>").text("Title: " + title));
             var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit Here" +'</a>' );
-            $('#panelTab'+ panelNum).append(gameUrl);
+            $('#tab1' +'panelTab'+ panelNum).append(gameUrl);
           }
           $('#tab1').show();
           $('#tab2').hide();
@@ -652,44 +658,44 @@ function topNews(){
           $('#tab4').hide();
         });
 
-      $.ajax({
-        url: polygonURL,
-        method: 'GET'
-      }).done(function(polygonData) {
-          var item = polygonData.articles;
-          for (var i=0; i< item.length;i++){
-             panelNum = panelNum + 1;
-            createPanel(panelNum, 'col-sm-4', '#tab1');
-            var resultRow = $("<div class='row'>");
-            var newRow = resultRow.attr('id','row'+panelNum);
-            var author = $("<p>").text("Author: " + item[i].author);
-            var published = $("<p>").text("Published: " + item[i].publishedAt);
-            var title = item[i].title;
-            var description = item[i].description;
-            var Url = item[i].url;
-            try {
-              var coverUrl = item[i].urlToImage;
-              var imageUrl = $("<img class=img-responsive>");
-              imageUrl.attr("src", coverUrl);
-              var imgDiv = $('<div class=videos>');
-              imgDiv.append(imageUrl);
-              $('#panelTab'+ panelNum).append(imgDiv);
-            }
-            catch(err){
-              console.log(err);
-            }
-            $('#panelTab'+ panelNum).append(author);
-            $('#panelTab'+ panelNum).append($("<p>").text("Description: " + description));
-            $('#panelTab'+ panelNum).append(published);
-            $('#panelTab'+ panelNum).append($("<p>").text("Title: " + title));
-            var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit Here" +'</a>' );
-            $('#panelTab'+ panelNum).append(gameUrl);
+    $.ajax({
+      url: polygonURL,
+      method: 'GET'
+    }).done(function(polygonData) {
+        var item = polygonData.articles;
+        for (var i=0; i< item.length;i++){
+           panelNum = panelNum + 1;
+          createPanel(panelNum, 'col-sm-4', 'tab1');
+          var resultRow = $("<div class='row'>");
+          var newRow = resultRow.attr('id','row'+panelNum);
+          var author = $("<p>").text("Author: " + item[i].author);
+          var published = $("<p>").text("Published: " + item[i].publishedAt);
+          var title = item[i].title;
+          var description = item[i].description;
+          var Url = item[i].url;
+          try {
+            var coverUrl = item[i].urlToImage;
+            var imageUrl = $("<img class=img-responsive>");
+            imageUrl.attr("src", coverUrl);
+            var imgDiv = $('<div class=videos>');
+            imgDiv.append(imageUrl);
+            $('#tab1' +'panelTab'+ panelNum).append(imgDiv);
           }
-          $('#tab1').show();
-          $('#tab2').hide();
-          $('#tab3').hide();
-          $('#tab4').hide();
-        });
+          catch(err){
+            console.log(err);
+          }
+          $('#tab1' +'panelTab'+ panelNum).append(author);
+          $('#tab1' +'panelTab'+ panelNum).append($("<p>").text("Description: " + description));
+          $('#tab1' +'panelTab'+ panelNum).append(published);
+          $('#tab1' +'panelTab'+ panelNum).append($("<p>").text("Title: " + title));
+          var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit Here" +'</a>' );
+          $('#tab1' +'panelTab'+ panelNum).append(gameUrl);
+        }
+        $('#tab1').show();
+        $('#tab2').hide();
+        $('#tab3').hide();
+        $('#tab4').hide();
+      });
 
 }
 
@@ -708,17 +714,48 @@ function topVideos(){
       $('#tab2').empty();
       for (var i=0; i< data["streams"].length;i++){
         var panelNum = i + 1;
-        createPanel(panelNum, 'col-sm-4', '#tab2');
+        createPanel(panelNum, 'col-sm-4', 'tab2');
         var resultRow = $("<div class='row'>");
-        var newRow = resultRow.attr('id','row'+panelNum)
+        var newRow = resultRow.attr('id','row'+panelNum);
         var channel = data["streams"][i]["channel"]["name"]; //.streams["0"].preview.medium
-        var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=http://player.twitch.tv/?channel=' + channel + ' frameborder="0" allowfullscreen></iframe>');
+        
+        var channelPic = $('<img src=' + data["streams"][i].preview.medium + ' width="300" height="300">');
+        channelPic.attr("id", "image");
+        //saving the image location as a location attribute to the image.
+        channelPic.attr("location", 'tab2' +'panelTab'+ panelNum)
+        // saving the channel video link as a href attribute to the image.
+        channelPic.attr("href","http://player.twitch.tv/?channel=" + channel )
         var videoDiv = $('<div class=videos>');
-        videoDiv.append(iFrame);
-        $('#panelTab'+ panelNum).append(videoDiv);
-        $('#panelTab'+ panelNum).append($("<p>").text("Game: " + data["streams"][i]["channel"]["game"]));
-        $('#panelTab'+ panelNum).append($("<p>").text("Description: " +data["streams"][i]["channel"]["description"]));
+        videoDiv.append(channelPic);
+        $('#tab2' +'panelTab'+ panelNum).append(videoDiv);
+        $('#tab2' +'panelTab'+ panelNum).append($("<p>").text("Game: " + data["streams"][i]["channel"]["game"]));
+        $('#tab2' +'panelTab'+ panelNum).append($("<p>").text("Description: " +data["streams"][i]["channel"]["description"]));
       }
     }
+  });
+}
+
+// Function to play video when the image is clicked in video's page.
+$(document).on("click", "#image",function(event){
+  event.preventDefault();
+
+  var channel = $(this).attr("href");
+  var videoLocation = $(this).attr("location");
+  console.log(videoLocation)
+  var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=' + channel + ' frameborder="0" allowfullscreen></iframe>');
+  $('#' + videoLocation).prepend(iFrame);
+  $(this).detach();
+
+
+})
+
+function amazonItemLookUP(tag){
+  $.ajax({
+        url: '/amazon',
+        type: 'GET',
+         data:{search: tag},
+        success: function(amazonData) {
+          console.log(amazonData);
+        }
   });
 }
