@@ -19,14 +19,12 @@ body{
     
 }
 
-
 .nav>li>a{
     color:yellow !important;
 }
 .nav>li>a:hover,
 .nav>li>a:focus,
 li a.selectedclass{
-    /*color:yellow !important;*/
     opacity: 0.5
     background:#305871;
     background: -webkit-linear-gradient(bottom, #305871 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
@@ -35,9 +33,12 @@ li a.selectedclass{
     background: linear-gradient(to top, #305871 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
 }
 .tab-content{
+    margin-top: 20px;
     color:black;
     background-color: gray;
-    border: 1px solid #ddd;
+    border:none;
+    overflow-y: scroll;
+    background-image: url("../images/witcher3.jpg")
 }
 
 #footer{
@@ -50,7 +51,6 @@ li a.selectedclass{
     margin-top: 80px;
 }
 #tabs>li.selectedclass{
-   /*color:yellow !important;*/
     opacity: 0.5
     background:#305871;
     background: -webkit-linear-gradient(bottom, #305871 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
@@ -69,17 +69,7 @@ li a.selectedclass{
     background: -o-linear-gradient(bottom, #305871 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
     background: linear-gradient(to top, #305871 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
 }
-.tab-content{
-    margin-top: 20px;
-    border:none;
-    /*overflow:auto;*/
-/*    min-height: 500px;
-    max-height: 500px;
-    overflow-y: scroll;
-    background-color:none;
-    background-image: url("../images/witcher3.jpg")
-*/
-}
+
 
 
 .panel-body{
@@ -88,4 +78,8 @@ li a.selectedclass{
     max-height: 300px;
     overflow:auto;
     overflow-y: scroll;
+}
+
+.modal{
+    display:none;
 }

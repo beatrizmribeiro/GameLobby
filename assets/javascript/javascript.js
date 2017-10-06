@@ -8,109 +8,47 @@
  */
 
 
-// Generic Confirm dialog func 
-function confirm(heading, question, cancelButtonTxt, okButtonTxt, callback) {
+// Generic Signup Form function
+function signUpFrm(heading, cancelButtonTxt, okButtonTxt) {
 
-    var confirmModal = 
-      $('<div class="modal fade">' +        
-          '<div class="modal-dialog" role="document">' +
-          '<div class="modal-content">' +
+  var confirmModal = 
+    $('<div class="modal fade">' +        
+      '<div class="modal-dialog" role="document">' +
+        '<div class="modal-content">' +
           '<div class="modal-header">' +
             '<a class="close" data-dismiss="modal" >&times;</a>' +
             '<h3>' + heading +'</h3>' +
           '</div>' +
-
           '<div class="modal-body">' +
-            '<p>' + question + '</p>' +
+              '<form role="form">' +
+                  '<div class="form-group">' +
+                    '<label for="name-input">Name:</label>' +
+                    '<input class="form-control" id="name-input" type="text"/>' +
+                    '<label for="email-input">Email:</label>' +
+                    '<input class="form-control" id="email-input" type="email"/>' +
+                    '<label for="comments-input">Your Comments:</label>' +
+                    '<textarea class="form-control" id="comments-input" rows="5"></textarea>' +
+                    // '<button class="btn btn-primary" id="commentBtn" type="submit" style="margin-right: 90px;" ;">Post your Comment</button>' +
+                  '</div>' +
+              '</form>' +
           '</div>' +
-
           '<div class="modal-footer">' +
-             '<button type="button" class="btn btn-secondary" data-dismiss="modal">' + cancelButtonTxt + 
-             '</button>' +
-             '<button type="button" class="btn btn-primary">' + okButtonTxt +
-             '</button>' +
+             '<button type="button" class="btn btn-secondary" data-dismiss="modal">' + cancelButtonTxt + '</button>' +
+             '<button type="button" class="btn btn-primary" id="saveBtn">' + okButtonTxt + '</button>' +
           '</div>' +
-          '</div>' +
-          '</div>' +
-        '</div>');
-
-    confirmModal.find('#okButton').click(function(event) {
-      callback();
-      confirmModal.modal('hide');
-    }); 
-    console.log(confirmModal);
-     confirmModal.modal('show');    
+        '</div>' +
+      '</div>' +
+    '</div>');
+    //  confirmModal.find(("#okButton").click(function(event){
+    // //   callback();
+     //  confirmModal.modal('hide');
+     // }));
+      confirmModal.modal('show');
+      confirmModal.modal('hide');     
   };  
-// END Generic Confirm func 
+// END Signup Form function 
 
 
-
-// Generic information dialog func 
-function infoDialog(heading, message, cancelButtonTxt) {
-
-    var confirmModal = 
-      $('<div class="modal fade">' +        
-          '<div class="modal-dialog" role="document">' +
-          '<div class="modal-content">' +
-          '<div class="modal-header">' +
-            '<a class="close" data-dismiss="modal" >&times;</a>' +
-            '<h3>' + heading +'</h3>' +
-          '</div>' +
-
-          '<div class="modal-body">' +
-              message +
-          '</div>' +
-
-          '<div class="modal-footer">' +
-             '<button type="button" class="btn btn-secondary" data-dismiss="modal">' + cancelButtonTxt + 
-             '</button>' +
-           '</div>' +
-          '</div>' +
-          '</div>' +
-        '</div>');
-
-    confirmModal.find('#okButton').click(function(event) {
-      confirmModal.modal('hide');
-    }); 
-    console.log(confirmModal);
-     confirmModal.modal('show');    
-  }; //information dialog function ends 
-
-
-var $modal = $('.modal');
-  // Show loader & then get content when modal is shown
-$modal.on('show.bs.modal', function(e) {
-  var paragraphs = $(e.relatedTarget).data('paragraphs');
-  $(this)
-    .addClass('modal-scrollfix')
-    .find('.modal-body')
-    .html('loading...')
-    .load(gamer, function() {
-      // Use Bootstrap's built-in function to fix scrolling (to no avail)
-      // $modal
-      //  .removeClass('modal-scrollfix')
-      //   .modal('handleUpdate');
-    });
-  });
-
-$(document).on("click","#news", function(event) {
-  console.log("btnClick gsearchBtn Function")
-  // refresh
- event.preventDefault();
-
-//queryURL = "https://newsapi.org/v1/articles?source=polygon&sortBy=top&apiKey=1f7f1d4b1e8149c5b11cd33e2829cff1";
-  var ignApiKEY = "457859b89daf48f1bab20c292e4ba57d"
-  var queryURL = "https://newsapi.org/v1/articles?source=ign&apiKey="+ ignApiKEY + "&sortBy=top&category=gaming" 
-  $.ajax({
-      url: queryURL,
-      method: 'GET'
-    }).done(function(response) {
-      console.log(response);
-    });
-  
-}); // News menu function ending.
-
-//============New code===
 
 // creating a Panel with Footer and no Header
 function createPanel(num, colsize, appendLocation){
@@ -135,10 +73,13 @@ function createPanel(num, colsize, appendLocation){
 
 }
 
+
 $(document).ready(function(){
+  // creating the basic layout when the document started.
+  // navHeadersFooters()
   layout();
   reset();
-  // $('#tab1').empty();
+  signUpFrm("Sign up - Comment Form", "Cancel", "Save")
   $('#tab1').show();
 
   topNews();
@@ -146,6 +87,73 @@ $(document).ready(function(){
   
 
 });
+function navHeadersFooters(){
+  var dCFulid = $('<div class="container-fluid">') 
+   var drow = $('<div class="row">')
+      var nHeader = $('<nav class="navbar navbar-nav navbar-fixed-top">')
+        var divContainer = $('<div class="container">'); //'<div class="container">' +
+        var navHeader =$ ('<div class="navbar-header">') 
+            var nbrand = $('<a class="navbar-brand" href="./"><img src="assets/images/GameLobby5.png" alt="Game Lobby"></a>')
+          // '</div>')
+        // Collect the nav links, forms, and other content for toggling
+          var dNavbar = $('<div id="navbar" class="navbar-toggler navbar-toggler-center">')
+            var nForm =$('<form class="form-inline navbar-right">')
+              var nFormSel = $('<select class="form-control " id="selSource">')
+                  var nFormSelOpt1 = $('<option class="source">igdb</option>')
+                  var nFormSelOpt2 = $('<option class="source">twitchtv</option>')
+                  var nFormSelOpt3 = $('<option class="source">gaintbomb</option>')
+                  var nFormSelOpt4 = $('<option class="source">ign</option>')
+                  var nFormSelOpt5 = $('<option class="source">twitter</option>')
+              // '</select>')
+              var nFormInput = $('<input class="form-control" id ="gsearch-input" type="text" placeholder="Search">')
+              var nFormBtn = $('<button class="btn btn-outline-success" id ="gsearchBtn" type="submit" search id="gsearch-input">Search</button>')
+            // '</form>')
+            var nFormUL = $('<ul class="nav navbar-nav ">')
+                var nFormLi1 = $('<li class="nav-item"><a class="nav-link" href="#">PC</a></li>')
+                var nFormLi2 = $('<li class="nav-item"><a class="nav-link" href="#">PS4</a></li>')
+                var nFormLi3 = $('<li class="nav-item"><a class="nav-link" href="#">Xbox One</a></li>')
+                var nFormLi4 = $('<li class="dropdown">')
+                    var nFormA = $('<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">more <span class="caret"></span></a>')
+                    var nFormUL1 = $('<ul class="dropdown-menu" role="menu">')
+                      var nFormLi5 = $('<li><a href="#">WII U</a></li>')
+                      var nFormLi6 = $('<li><a href="#">PS3</a></li>')
+                      var nFormLi7 = $('<li><a href="#">Xbox 360</a></li>')
+                      var nFormLi8 = $('<li><a href="#">3DS</a></li>')
+                      var nFormLi9 = $('<li><a href="#">GAMETECH</a></li>')
+  dCFulid.append(drow);
+  drow.append(nHeader);
+  nHeader.append(divContainer);
+  divContainer.append(navHeader);
+  navHeader.append(nbrand);
+  navHeader.append(dNavbar);
+            dNavbar.append(nForm)
+            nForm.append(nFormSel)
+            nFormSel.append(nFormSelOpt1)
+            nFormSel.append(nFormSelOpt2)
+            nFormSel.append(nFormSelOpt3)
+            nFormSel.append(nFormSelOpt4)
+            nFormSel.append(nFormSelOpt5)
+            nForm.append(nFormInput)
+            nForm.append(nFormBtn)
+              nFormUL.append(nFormLi1)
+              nFormUL.append(nFormLi2)
+              nFormUL.append(nFormLi3)
+              nFormUL.append(nFormLi4)
+              nFormUL.append(nFormUL1)          
+                  nFormUL1.append(nFormLi5)
+                  nFormUL1.append(nFormLi6)
+                  nFormUL1.append(nFormLi7)
+                  nFormUL1.append(nFormLi8)
+                  nFormUL1.append(nFormLi9)    
+  $(".mypage").append(dCFulid);
+  var navfooter = $('<nav class="navbar navbar-nav navbar-fixed-bottom">');
+  var divContainer = $('<div class="container">');
+  var fComment = $('<p id="footer" class="navbar-text navbar-right">&#169; Copyright 2017 Srivatsava - Brad - Beatriz</p>')
+  navfooter.append(divContainer);
+  divContainer.append(fComment);
+  $(".mypage").append(navfooter);
+}
+
 // creating the layout for displaying the Tabs.
 function layout(){
   var tabNames = ['Top News','Twitch Video','SearchResults','Comments'];
@@ -393,37 +401,30 @@ function gamer(data) {
 }
 
 
-//=========================
-// Form for creating comments.
-function commentFrm(frmDlg){
-  var pbody = $('<div class="panel-body">');
-  var frm = $('<form role="form">');
-  var frmDiv = $('<div class="form-group">');
-  var frmLabel = $('<label for="name-input">Name:</label>');
-  var frmNameInput = $('<input class="form-control" id="name-input" type="text"/>');
-  var frmCmtLabel = $('<label for="comments-input">Your Comments:</label>');
-  var frmTxtArea = $('<textarea class="form-control" id="comments-input" rows="5"></textarea>');
-  var frmBtn = $('<button class="btn btn-primary" id="commentBtn" type="submit" style="margin-right: 90px;" ;">Post your Comment</button>');
-
-  frm.append(frmDiv);
-  frmDiv.append(frmLabel);
-  frmDiv.append(frmNameInput);
-  frm.append(frmDiv);
-  frmDiv.append(frmCmtLabel);
-  frmDiv.append(frmTxtArea);
-  frm.append(frmBtn);
-  pbody.append(frm);
-  $(frmDlg).append(pbody);
-}
-
-
-
-
 //  Writing the comment information into the database.
-$(document).on("click","#commentBtn", function(event) {
+$(document).on("click","#pCommentBtn", function(event) {
+// preventing auto refresh when button clicked.
+  console.log($(this))
+  event.preventDefault();
+  $(".modal").modal('show');
+  console.log($(this))
+  console.log($(this)["0"].parentElement.parentElement.firstChild.children[4].text)
+  
+});
+
+$(document).on("click","#saveBtn", function(event) {
 // preventing auto refresh when button clicked.
   event.preventDefault();
-  //var game = $(this).parent.
+  // $(".modal").modal('show');
+  console.log("saveBtn");
+  //saving the comments to the firebase database.
+  // saveComment();
+
+  $(".modal").modal('hide');
+  
+});
+
+function saveComment(){
   // firebase comment database access configuration
   var config = {
     apiKey: "AIzaSyAf7Ye7jq1ZJiTiNyQj123zyB5sxN3P2M0",
@@ -439,11 +440,13 @@ $(document).on("click","#commentBtn", function(event) {
   var database = firebase.database();
 
   var cName = $("#name-input").val().trim();
+  var cEmail = $("#email-input").val().trim();
   var cMsg = $("#comments-input").val().trim();
   var cTime = moment().format('MMMM Do YYYY, h:mm:ss a');
 
   var newComments = {
       name: cName,
+      email:cEmail,
       comments: cMsg,
       time: cTime
       //get the game information and upate here.
@@ -459,10 +462,15 @@ $(document).on("click","#commentBtn", function(event) {
 
   // Clear the UI fields
   $("#name-input").val("");
+  $("#email-input").val("");
   $("#comments-input").val("");
-  $("#time-input").val("");
-});
-    // END database write
+  // $("#time-input").val("");
+
+  // END database write
+
+}
+
+
 
 // To display content from igdb Query results
 function igdbResults(data){
@@ -759,3 +767,6 @@ function amazonItemLookUP(tag){
         }
   });
 }
+
+
+

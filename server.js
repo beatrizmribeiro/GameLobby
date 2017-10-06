@@ -59,18 +59,6 @@ app.get('/amazon', function(req, res){
 	  	res.json(results);
 	  }
 	});
-	// client.itemLookup({
-	//   idType: 'UPC',
-	//   itemId: '635753490879',
-	//   responseGroup: 'ItemAttributes,Offers,Images'
-	// }, function(err, results, response) {
-	//   if (err) {
-	//     console.log(err);
-	//   } else {
-	//     console.log(results);
-	//     res.json(results);
-	//   }
-	// });
 });
 //==========================Amazon related==========================
 
