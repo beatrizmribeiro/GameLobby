@@ -98,7 +98,7 @@ $(document).on("click","#news", function(event) {
   // refresh
  event.preventDefault();
 
-
+//queryURL = "https://newsapi.org/v1/articles?source=polygon&sortBy=top&apiKey=1f7f1d4b1e8149c5b11cd33e2829cff1";
   var ignApiKEY = "457859b89daf48f1bab20c292e4ba57d"
   var queryURL = "https://newsapi.org/v1/articles?source=ign&apiKey="+ ignApiKEY + "&sortBy=top&category=gaming" 
   $.ajax({
@@ -138,12 +138,17 @@ function createPanel(num, colsize, appendLocation){
 $(document).ready(function(){
   layout();
   reset();
+  // $('#tab1').empty();
   $('#tab1').show();
+
+  topNews();
+  topVideos();
+  
 
 });
 // creating the layout for displaying the Tabs.
 function layout(){
-  var tabNames = ['Video','News','Platforms','Tweets'];
+  var tabNames = ['Top News','Twitch Video','SearchResults','Comments'];
   var navs = $('<ul class="nav nav-tabs nav-justified">');
   navs.attr('id', 'tabs');
   var displayDiv = $('<div id=displayDiv>');
@@ -174,77 +179,76 @@ $('#tabs a').click(function (e) {
 
 $(document).on("click",function(){
   var activeElement = $(this)[0].activeElement;
-  if (activeElement.text=== 'Videos') {
+  if (activeElement.text=== 'Top News') {
     $('#tab1').show();
     $('#tab2').hide();
     $('#tab3').hide();
     $('#tab4').hide();
-  }
-  else if (activeElement.text=== 'News') {
+  }else if (activeElement.text=== 'Twitch Video') {
     $('#tab2').show();
     $('#tab1').hide();
     $('#tab3').hide();
     $('#tab4').hide();
   }
-  else if (activeElement.text=== 'Platforms') {
+  else if (activeElement.text=== 'SearchResults') {
     $('#tab3').show();
     $('#tab1').hide();
     $('#tab2').hide();
     $('#tab4').hide();
   }
-  else if (activeElement.text=== 'Tweets') {
+  else if (activeElement.text=== 'Comments') {
     $('#tab4').show();
     $('#tab1').hide();
     $('#tab2').hide();
     $('#tab3').hide();
   }else if (activeElement.text=== 'PC') {
     iPlatformSearch("PC")
-    $('#tab4').show();
+    $('#tab3').show();
     $('#tab1').hide();
     $('#tab2').hide();
-    $('#tab3').hide();
+    $('#tab4').hide();
   }else if (activeElement.text=== 'PS4') {
     iPlatformSearch("PS4");
-    $('#tab4').show();
+    $('#tab3').show();
     $('#tab1').hide();
     $('#tab2').hide();
-    $('#tab3').hide();
+    $('#tab4').hide();
   }else if (activeElement.text=== 'Xbox One') {
     iPlatformSearch("Xbox One");
-    $('#tab4').show();
+    $('#tab3').show();
     $('#tab1').hide();
     $('#tab2').hide();
-    $('#tab3').hide();
+    $('#tab4').hide();
   }else if (activeElement.text=== 'WII U') {
     iPlatformSearch("WII U");
-    $('#tab4').show();
+    $('#tab3').show();
     $('#tab1').hide();
     $('#tab2').hide();
-    $('#tab3').hide();
+    $('#tab4').hide();
   }else if (activeElement.text=== 'PS3') {
     iPlatformSearch("PS3");
-    $('#tab4').show();
+    $('#tab3').show();
     $('#tab1').hide();
     $('#tab2').hide();
-    $('#tab3').hide();
+    $('#tab4').hide();
   }else if (activeElement.text=== 'Xbox 360') {
     iPlatformSearch("Xbox 360");
-    $('#tab4').show();
+    $('#tab3').show();
     $('#tab1').hide();
     $('#tab2').hide();
-    $('#tab3').hide();
+    $('#tab4').hide();
   }else if (activeElement.text=== '3DS') {
     iPlatformSearch("3DS");
-    $('#tab4').show();
+    $('#tab3').show();
     $('#tab1').hide();
     $('#tab2').hide();
-    $('#tab3').hide();
+    $('#tab4').hide();
   }else if (activeElement.text=== 'GAMETECH') {
     iPlatformSearch("GAMETECH");
-    $('#tab4').show();
+    $('#tab3').show();
     $('#tab1').hide();
     $('#tab2').hide();
-    $('#tab3').hide();
+    $('#tab4').hide();
   }else{
     console.log('No active elements');
   } 
@@ -286,7 +290,8 @@ $(document).on("click", "#gsearchBtn",function(event) {
         url: queryURL,
         method: 'GET'
       }).done(function(ignData) {
-        ignResults(ignData)
+        console.log(ignData)
+        // ignResults(ignData)
       });
   }
   // connecing to gaintbomb to get articles based on the Query.
@@ -343,7 +348,7 @@ $(document).on("click", "#gsearchBtn",function(event) {
 //Gamer function callback for gaintbomb query
 function gamer(data) {
   //search the results and find the resource_type = "video" then copy the embed_player and the high_url, low_url, hd_url urls.
-  $("#tab2").empty();
+  $("#tab3").empty();
   var resourceType = '';
   var results = data.results;
   var resultRow = $("<div class='row'>");
@@ -352,7 +357,7 @@ function gamer(data) {
  // looking through the results and appending them to the panels.
   for (var i=0; i< results.length;i++){
     var panelNum = i + 1;
-    createPanel(panelNum, 'col-sm-4', '#tab2');
+    createPanel(panelNum, 'col-sm-4', '#tab3');
     var newRow = resultRow.attr('id','row'+panelNum);
     // console.log(newRow)
   
@@ -463,11 +468,11 @@ function igdbResults(data){
   // console.log("summary: " + data.body["0"].summary)
   // console.log("coverURL: " + data.body["0"].cover.url)
   // console.log("URL: " + data.body["0"].url)
-  $('#tab2').empty();
+  $('#tab3').empty();
   var item = data.body;
   for (var i=0; i< item.length;i++){
     var panelNum = i + 1;
-    createPanel(panelNum, 'col-sm-4', '#tab2');
+    createPanel(panelNum, 'col-sm-4', '#tab3');
     var resultRow = $("<div class='row'>");
     var newRow = resultRow.attr('id','row'+panelNum);
     var name = item[i].name;
@@ -489,11 +494,10 @@ function igdbResults(data){
     $('#panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
     $('#panelTab'+ panelNum).append(gameUrl);
   }
-  $('#tab2').show();
+  $('#tab3').show();
   $('#tab1').hide();
-  $('#tab3').hide();
+  $('#tab2').hide();
   $('#tab4').hide();
-
 }
 
 function platformResults(data){
@@ -532,8 +536,6 @@ function platformResults(data){
     $('#panelTab'+ panelNum).append($("<p>").text("Name: " + name));
     $('#panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
     $('#panelTab'+ panelNum).append(gameUrl);
-    
-
   }
   $('#tab3').show();
   $('#tab1').hide();
@@ -548,11 +550,11 @@ function twitterResults(data){
   console.log("summary: " + data.statuses["0"].summary);
   console.log("text: " + data.statuses["0"].text);
   console.log("URL: " + data.statuses["0"].source);
-  $('#tab4').empty();
+  $('#tab3').empty();
   var item = data.statuses;
   for (var i=0; i< item.length;i++){
     var panelNum = i + 1;
-    createPanel(panelNum, 'col-sm-4', '#tab4');
+    createPanel(panelNum, 'col-sm-4', '#tab3');
     var resultRow = $("<div class='row'>");
     var newRow = resultRow.attr('id','row'+panelNum);
     var id = $("<p>").text("ID: " + item[i].id);
@@ -579,17 +581,17 @@ function twitterResults(data){
     
 
   }
-  $('#tab4').show();
+  $('#tab3').show();
   $('#tab1').hide();
   $('#tab2').hide();
-  $('#tab3').hide();
+  $('#tab4').hide();
 }
 
 function twitchData(data){
-    $('#tab1').empty();
+    $('#tab2').empty();
     for (var i=0; i< data["streams"].length;i++){
       var panelNum = i + 1;
-      createPanel(panelNum, 'col-sm-4', '#tab1');
+      createPanel(panelNum, 'col-sm-4', '#tab2');
       var resultRow = $("<div class='row'>");
       var newRow = resultRow.attr('id','row'+panelNum)
       var channel = data["streams"][i]["channel"]["name"];
@@ -600,8 +602,123 @@ function twitchData(data){
       $('#panelTab'+ panelNum).append($("<p>").text("Game: " + data["streams"][i]["channel"]["game"]));
       $('#panelTab'+ panelNum).append($("<p>").text("Description: " +data["streams"][i]["channel"]["description"]));
     }
-    $('#tab1').show();
-    $('#tab2').hide();
+    $('#tab2').show();
+    $('#tab1').hide();
     $('#tab3').hide();
     $('#tab4').hide();
+}
+
+function topNews(){
+
+    var ignURL = "https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=1f7f1d4b1e8149c5b11cd33e2829cff1";
+    var polygonURL = "https://newsapi.org/v1/articles?source=polygon&sortBy=top&apiKey=1f7f1d4b1e8149c5b11cd33e2829cff1";
+    var panelNum =0;
+    $.ajax({
+        url: ignURL,
+        method: 'GET'
+      }).done(function(ignData) {
+          var item = ignData.articles;
+          for (var i=0; i< item.length;i++){
+            panelNum = i + 1;
+            createPanel(panelNum, 'col-sm-4', '#tab1');
+            var resultRow = $("<div class='row'>");
+            var newRow = resultRow.attr('id','row'+panelNum);
+            var author = $("<p>").text("Author: " + item[i].author);
+            var published = $("<p>").text("Published: " + item[i].publishedAt);
+            var title = item[i].title;
+            var description = item[i].description;
+            var Url = item[i].url;
+            try {
+              var coverUrl = item[i].urlToImage;
+              var imageUrl = $("<img class=img-responsive>");
+              imageUrl.attr("src", coverUrl);
+              var imgDiv = $('<div class=videos>');
+              imgDiv.append(imageUrl);
+              $('#panelTab'+ panelNum).append(imgDiv);
+            }
+            catch(err){
+              console.log(err);
+            }
+            $('#panelTab'+ panelNum).append(author);
+            $('#panelTab'+ panelNum).append($("<p>").text("Description: " + description));
+            $('#panelTab'+ panelNum).append(published);
+            $('#panelTab'+ panelNum).append($("<p>").text("Title: " + title));
+            var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit Here" +'</a>' );
+            $('#panelTab'+ panelNum).append(gameUrl);
+          }
+          $('#tab1').show();
+          $('#tab2').hide();
+          $('#tab3').hide();
+          $('#tab4').hide();
+        });
+
+      $.ajax({
+        url: polygonURL,
+        method: 'GET'
+      }).done(function(polygonData) {
+          var item = polygonData.articles;
+          for (var i=0; i< item.length;i++){
+             panelNum = panelNum + 1;
+            createPanel(panelNum, 'col-sm-4', '#tab1');
+            var resultRow = $("<div class='row'>");
+            var newRow = resultRow.attr('id','row'+panelNum);
+            var author = $("<p>").text("Author: " + item[i].author);
+            var published = $("<p>").text("Published: " + item[i].publishedAt);
+            var title = item[i].title;
+            var description = item[i].description;
+            var Url = item[i].url;
+            try {
+              var coverUrl = item[i].urlToImage;
+              var imageUrl = $("<img class=img-responsive>");
+              imageUrl.attr("src", coverUrl);
+              var imgDiv = $('<div class=videos>');
+              imgDiv.append(imageUrl);
+              $('#panelTab'+ panelNum).append(imgDiv);
+            }
+            catch(err){
+              console.log(err);
+            }
+            $('#panelTab'+ panelNum).append(author);
+            $('#panelTab'+ panelNum).append($("<p>").text("Description: " + description));
+            $('#panelTab'+ panelNum).append(published);
+            $('#panelTab'+ panelNum).append($("<p>").text("Title: " + title));
+            var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit Here" +'</a>' );
+            $('#panelTab'+ panelNum).append(gameUrl);
+          }
+          $('#tab1').show();
+          $('#tab2').hide();
+          $('#tab3').hide();
+          $('#tab4').hide();
+        });
+
+}
+
+function topVideos(){
+
+  $.ajax({
+    type: 'GET',
+    Accept: 'application/vnd.twitchtv.v5+json',
+    url: 'https://api.twitch.tv/kraken/streams/?limit=25',
+    headers: {
+      'Client-ID': 'ba9klm2l5l7x75tlpvk87qpnjv8pbx',
+      'Accept': 'application/vnd.twitchtv.v5+json',
+    },
+    success :function(data){
+      console.log(data);
+      $('#tab2').empty();
+      for (var i=0; i< data["streams"].length;i++){
+        var panelNum = i + 1;
+        createPanel(panelNum, 'col-sm-4', '#tab2');
+        var resultRow = $("<div class='row'>");
+        var newRow = resultRow.attr('id','row'+panelNum)
+        var channel = data["streams"][i]["channel"]["name"]; //.streams["0"].preview.medium
+        var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=http://player.twitch.tv/?channel=' + channel + ' frameborder="0" allowfullscreen></iframe>');
+        var videoDiv = $('<div class=videos>');
+        videoDiv.append(iFrame);
+        $('#panelTab'+ panelNum).append(videoDiv);
+        $('#panelTab'+ panelNum).append($("<p>").text("Game: " + data["streams"][i]["channel"]["game"]));
+        $('#panelTab'+ panelNum).append($("<p>").text("Description: " +data["streams"][i]["channel"]["description"]));
+      }
+    }
+  });
 }
