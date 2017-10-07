@@ -4,8 +4,8 @@ var app = express();
 
 app.get("/",function(req, res){res.sendFile(__dirname + "/assets/index.html")});
 app.use('/assets', express.static(path.join(__dirname + "/assets")));
- app.listen(3000, function(){
-console.log('listening on' + 3000);
+app.listen(3000, function(){
+console.log('listening on port:' + 3000);
 
 })
 //=============Twitter data=================
