@@ -7,8 +7,23 @@
  * 
  */
 
+//firebase configuration.
+var config = {
+    apiKey: "AIzaSyAf7Ye7jq1ZJiTiNyQj123zyB5sxN3P2M0",
+    authDomain: "comments-e35cc.firebaseapp.com",
+    databaseURL: "https://comments-e35cc.firebaseio.com",
+    projectId: "comments-e35cc",
+    storageBucket: "",
+    messagingSenderId: "514530584313"
+  };
+    
+  // firebase initialization section
+firebase.initializeApp(config);
+var database = firebase.database();
+var usrCommentRef = database.ref('/game/comments');
 
-// Generic Signup Form function
+
+// Generic Confirm dialog func 
 function signUpFrm(heading, cancelButtonTxt, okButtonTxt) {
 
   var confirmModal = 
@@ -34,7 +49,7 @@ function signUpFrm(heading, cancelButtonTxt, okButtonTxt) {
           '</div>' +
           '<div class="modal-footer">' +
              '<button type="button" class="btn btn-secondary" data-dismiss="modal">' + cancelButtonTxt + '</button>' +
-             '<button type="button" class="btn btn-primary" id="saveBtn">' + okButtonTxt + '</button>' +
+             '<button type="button" class="btn btn-primary" data-dismiss="modal" id="saveBtn">' + okButtonTxt + '</button>' +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -46,7 +61,7 @@ function signUpFrm(heading, cancelButtonTxt, okButtonTxt) {
       confirmModal.modal('show');
       confirmModal.modal('hide');     
   };  
-// END Signup Form function 
+// END Generic Confirm func 
 
 
 
@@ -81,78 +96,12 @@ $(document).ready(function(){
   reset();
   signUpFrm("Sign up - Comment Form", "Cancel", "Save")
   $('#tab1').show();
-
+  commentTable()
   topNews();
-  
-  
+ 
 
 });
-function navHeadersFooters(){
-  var dCFulid = $('<div class="container-fluid">') 
-   var drow = $('<div class="row">')
-      var nHeader = $('<nav class="navbar navbar-nav navbar-fixed-top">')
-        var divContainer = $('<div class="container">'); //'<div class="container">' +
-        var navHeader =$ ('<div class="navbar-header">') 
-            var nbrand = $('<a class="navbar-brand" href="./"><img src="assets/images/GameLobby5.png" alt="Game Lobby"></a>')
-          // '</div>')
-        // Collect the nav links, forms, and other content for toggling
-          var dNavbar = $('<div id="navbar" class="navbar-toggler navbar-toggler-center">')
-            var nForm =$('<form class="form-inline navbar-right">')
-              var nFormSel = $('<select class="form-control " id="selSource">')
-                  var nFormSelOpt1 = $('<option class="source">igdb</option>')
-                  var nFormSelOpt2 = $('<option class="source">twitchtv</option>')
-                  var nFormSelOpt3 = $('<option class="source">gaintbomb</option>')
-                  var nFormSelOpt4 = $('<option class="source">ign</option>')
-                  var nFormSelOpt5 = $('<option class="source">twitter</option>')
-              // '</select>')
-              var nFormInput = $('<input class="form-control" id ="gsearch-input" type="text" placeholder="Search">')
-              var nFormBtn = $('<button class="btn btn-outline-success" id ="gsearchBtn" type="submit" search id="gsearch-input">Search</button>')
-            // '</form>')
-            var nFormUL = $('<ul class="nav navbar-nav ">')
-                var nFormLi1 = $('<li class="nav-item"><a class="nav-link" href="#">PC</a></li>')
-                var nFormLi2 = $('<li class="nav-item"><a class="nav-link" href="#">PS4</a></li>')
-                var nFormLi3 = $('<li class="nav-item"><a class="nav-link" href="#">Xbox One</a></li>')
-                var nFormLi4 = $('<li class="dropdown">')
-                    var nFormA = $('<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">more <span class="caret"></span></a>')
-                    var nFormUL1 = $('<ul class="dropdown-menu" role="menu">')
-                      var nFormLi5 = $('<li><a href="#">WII U</a></li>')
-                      var nFormLi6 = $('<li><a href="#">PS3</a></li>')
-                      var nFormLi7 = $('<li><a href="#">Xbox 360</a></li>')
-                      var nFormLi8 = $('<li><a href="#">3DS</a></li>')
-                      var nFormLi9 = $('<li><a href="#">GAMETECH</a></li>')
-  dCFulid.append(drow);
-  drow.append(nHeader);
-  nHeader.append(divContainer);
-  divContainer.append(navHeader);
-  navHeader.append(nbrand);
-  navHeader.append(dNavbar);
-            dNavbar.append(nForm)
-            nForm.append(nFormSel)
-            nFormSel.append(nFormSelOpt1)
-            nFormSel.append(nFormSelOpt2)
-            nFormSel.append(nFormSelOpt3)
-            nFormSel.append(nFormSelOpt4)
-            nFormSel.append(nFormSelOpt5)
-            nForm.append(nFormInput)
-            nForm.append(nFormBtn)
-              nFormUL.append(nFormLi1)
-              nFormUL.append(nFormLi2)
-              nFormUL.append(nFormLi3)
-              nFormUL.append(nFormLi4)
-              nFormUL.append(nFormUL1)          
-                  nFormUL1.append(nFormLi5)
-                  nFormUL1.append(nFormLi6)
-                  nFormUL1.append(nFormLi7)
-                  nFormUL1.append(nFormLi8)
-                  nFormUL1.append(nFormLi9)    
-  $(".mypage").append(dCFulid);
-  var navfooter = $('<nav class="navbar navbar-nav navbar-fixed-bottom">');
-  var divContainer = $('<div class="container">');
-  var fComment = $('<p id="footer" class="navbar-text navbar-right">&#169; Copyright 2017 Srivatsava - Brad - Beatriz</p>')
-  navfooter.append(divContainer);
-  divContainer.append(fComment);
-  $(".mypage").append(navfooter);
-}
+
 
 // creating the layout for displaying the Tabs.
 function layout(){
@@ -418,26 +367,15 @@ $(document).on("click","#saveBtn", function(event) {
   // $(".modal").modal('show');
   console.log("saveBtn");
   //saving the comments to the firebase database.
-  // saveComment();
-
+   saveComment();
+   displayComments();
   $(".modal").modal('hide');
   
 });
 
 function saveComment(){
   // firebase comment database access configuration
-  var config = {
-    apiKey: "AIzaSyAf7Ye7jq1ZJiTiNyQj123zyB5sxN3P2M0",
-    authDomain: "comments-e35cc.firebaseapp.com",
-    databaseURL: "https://comments-e35cc.firebaseio.com",
-    projectId: "comments-e35cc",
-    storageBucket: "",
-    messagingSenderId: "514530584313"
-  };
-    
-  // firebase initialization section
-  firebase.initializeApp(config);
-  var database = firebase.database();
+ 
 
   var cName = $("#name-input").val().trim();
   var cEmail = $("#email-input").val().trim();
@@ -458,13 +396,12 @@ function saveComment(){
   // console.log(newComments.time);
 
   // Push the new Comment contents to the database.
-  database.ref('/game/comments').push(newComments);
+  usrCommentRef.push(newComments);
 
   // Clear the UI fields
   $("#name-input").val("");
   $("#email-input").val("");
   $("#comments-input").val("");
-  // $("#time-input").val("");
 
   // END database write
 
@@ -495,7 +432,7 @@ function igdbResults(data){
       imageUrl.attr("src", coverUrl);
       var imgDiv = $('<div class=videos>');
       imgDiv.append(imageUrl);
-      $('tab3' +'panelTab'+ panelNum).append(imgDiv);
+      $('#tab3' +'panelTab'+ panelNum).append(imgDiv);
     }
     catch(err){
       console.log(err);
@@ -769,4 +706,71 @@ function amazonItemLookUP(tag){
 }
 
 
+// table to display user comments from Firebase database.
+function commentTable(){
+  
+  var pdefault = $('<div class="panel panel-default">')
+  var pheader = $('<div class="panel-heading">')
+  pheader.addClass("text-center");
+  pheader.attr('id', "tab4pHeader")
+  var pTitle = $('<h3 class="panel-title">') //Panel title</h3>
+  var pbody = $('<div class="panel-body">');
+  pbody.attr('id', 'tab4PanelBody');
+  pheader.text("USER COMMENTS TABLE");
+  pheader.append(pTitle);
+  pdefault.append(pheader);
+  var table = $('<table class="table" id="comment-table">')
+  var tThead = $('<thead>');
+  var tbody = $('<tbody>');
+  tbody.attr('id',"tbody")
+  var tTr = $('<tr>');
+  var tTh = $('<th>User</th>');
+  var tTh1 = $('<th>Email</th>');
+  var tTh2 = $('<th>Comment</th>');
+  var tTh3 = $('<th>Time</th>');
+  table.append(tThead);
+  tThead.append(tTr);
+  tTr.append(tTh);
+  tTr.append(tTh1);
+  tTr.append(tTh2);
+  tTr.append(tTh3);
+  table.append(tbody);
+  pbody.append(table);
+  pdefault.append(pbody);
+  // Panel content
+  var paneldiv = $('<div class=paneldiv>');
+  paneldiv.addClass('col-sm-12');
+  // append the panel Default to the container-fluid
+  paneldiv.append(pdefault);
+  $('#tab4').append(paneldiv);
 
+}
+
+
+
+
+function displayComments(snapshot){
+  
+  // usrCommentRef.on("child_added", function(snapshot) { 
+    // firebase comment database access configuration
+    var cName = snapshot.val().name;
+    var cEmail = snapshot.val().email;
+    var cComments = snapshot.val().comments;
+    var cTime = snapshot.val().time;
+    console.log(snapshot.val().name);
+    console.log(snapshot.val().email);
+    console.log(snapshot.val().comments);
+    console.log(snapshot.val().time);
+
+    // Add each user comment data into the table
+    $("#comment-table > tbody").append("<tr><td>" + cName + "</td><td>" + cEmail + "</td><td>" +
+    cComments + "</td><td>" + cTime  + "</td></td><td></tr>");
+  
+}
+
+// New comment added
+usrCommentRef.on("child_added", function(childSnapshot){
+
+  displayComments(childSnapshot);
+
+ });

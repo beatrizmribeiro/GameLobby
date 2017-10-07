@@ -19,6 +19,7 @@ body{
     
 }
 
+
 .nav>li>a{
     color:yellow !important;
 }
@@ -37,8 +38,7 @@ li a.selectedclass{
     color:black;
     background-color: gray;
     border:none;
-    overflow-y: scroll;
-    background-image: url("../images/witcher3.jpg")
+    /*background-image: url("../images/witcher3.jpg")*/
 }
 
 #footer{
@@ -60,7 +60,8 @@ li a.selectedclass{
 }
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus,
 #gsearchBtn,#gsearchBtn:hover, #gsearchBtn:focus,
-#pCommentBtn,#pCommentBtn:hover, #pCommentBtn:focus {
+#pCommentBtn,#pCommentBtn:hover, #pCommentBtn:focus,
+#tab4pHeader {
     color:yellow;
     opacity: 0.5
     background:#305871;
@@ -69,8 +70,6 @@ li a.selectedclass{
     background: -o-linear-gradient(bottom, #305871 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
     background: linear-gradient(to top, #305871 40%, rgba(0, 0, 0, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
 }
-
-
 
 .panel-body{
     height:100%;
@@ -82,4 +81,24 @@ li a.selectedclass{
 
 .modal{
     display:none;
+}
+
+
+#tab4PanelBody{
+    min-height: 800px;
+    max-height:800px;
+}
+#comment-table th:first-child {
+    width: 15%;
+}
+
+#comment-table th:nth-child(2) {
+    width: 30%;
+}
+
+#comment-table th:nth-child(3) {
+    width: 40%;
+}
+#comment-table th:nth-child(4) {
+    width: 15%;
 }
